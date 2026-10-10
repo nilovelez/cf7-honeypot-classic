@@ -110,8 +110,6 @@ function choneypot4cf7_maybe_import_settings() {
 			'nomessage'              => $as_flag( 'accessibility_label' ),
 			'timecheck_enabled'      => $as_flag( 'enable_time_check' ),
 			'timecheck_value'        => isset( $settings['time_check'] ) ? (int) $settings['time_check'] : 4,
-			'honeypot_count'         => isset( $settings['honeypot_count'] ) ? (int) $settings['honeypot_count'] : 0,
-			'honeypot_install_date'  => isset( $settings['honeypot_install_date'] ) ? (int) $settings['honeypot_install_date'] : time(),
 		);
 	} elseif ( is_array( $legacy_config ) ) {
 		$keys     = array(
@@ -123,8 +121,6 @@ function choneypot4cf7_maybe_import_settings() {
 			'nomessage',
 			'timecheck_enabled',
 			'timecheck_value',
-			'honeypot_count',
-			'honeypot_install_date',
 		);
 		$imported = array_intersect_key( $legacy_config, array_flip( $keys ) );
 	}

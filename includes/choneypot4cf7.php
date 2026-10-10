@@ -158,7 +158,6 @@ function choneypot4cf7_spam_check( $spam, $submission = null ) {
 	}
 
 	foreach ( $hp_ids as $hpid ) {
-		$choneypot4cf7_config = choneypot4cf7_get_config();
 		$value = isset( $_POST[$hpid] ) ? $_POST[$hpid] : '';
 		
 
@@ -186,9 +185,6 @@ function choneypot4cf7_spam_check( $spam, $submission = null ) {
 					) );
 				}
 
-				$choneypot4cf7_config['honeypot_count'] = ( isset( $choneypot4cf7_config['honeypot_count'] ) ) ? $choneypot4cf7_config['honeypot_count'] + 1 : 1;
-				update_option( 'choneypot4cf7_config', $choneypot4cf7_config );
-				
 				return $spam; // There's no need to go on, this is most likely a bot submission.
 
 			}
@@ -210,9 +206,6 @@ function choneypot4cf7_spam_check( $spam, $submission = null ) {
 				) );
 			}
 
-			$choneypot4cf7_config['honeypot_count'] = ( isset( $choneypot4cf7_config['honeypot_count'] ) ) ? $choneypot4cf7_config['honeypot_count'] + 1 : 1;
-			update_option( 'choneypot4cf7_config', $choneypot4cf7_config );
-			
 			return $spam; // There's no need to go on, we've got flies in the honey.
 		}
 
