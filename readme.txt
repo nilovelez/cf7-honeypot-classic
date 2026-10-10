@@ -2,7 +2,7 @@
 Contributors: nilovelez
 Tags: honeypot, antispam, anti-spam, spam, contact form 7
 Requires at least: 6.5
-Tested up to: 6.8
+Tested up to: 7.1
 Requires PHP: 7.4
 Requires Plugins: contact-form-7
 Stable tag: 1.0.0
