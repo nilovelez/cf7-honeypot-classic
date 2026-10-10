@@ -183,10 +183,6 @@ function choneypot4cf7_admin_page() {
 			<div class="choneypot4cf7-admin__box">
 				<form action="" method="post" id="choneypot4cf7_options_form" name="choneypot4cf7_options_form">
 					<?php wp_nonce_field( 'choneypot4cf7-submit', 'choneypot4cf7_nonce' ); ?>
-					<a href="https://wordpress.org/support/plugin/contact-form-7-honeypot/" target="_blank" class="choneypot4cf7_admin__support-link">
-						<span class="dashicons dashicons-editor-help"></span>
-						<?php esc_html_e( 'Get Support', 'classic-honeypot-for-cf7' ); ?>
-					</a>
 					<h3><span class="dashicons dashicons-admin-generic"></span> <?php esc_html_e( 'Honeypot Settings', 'classic-honeypot-for-cf7' ); ?></h3>
 					<p class="choneypot4cf7-admin__introduction"><?php esc_html_e( 'Below are global settings for the Honeypot plugin. Many of these settings can be overridden when inserting the Honeypot field shortcode when creating your CF7 contact form.', 'classic-honeypot-for-cf7' ); ?></p>
 					<table class="form-table">
@@ -285,12 +281,6 @@ function choneypot4cf7_admin_page() {
 					</p>
 				</form>
 			</div>
-			<div class="choneypot4cf7__banner-ad choneypot4cf7__banner-ad--1a">
-				<a target="_blank" href="https://shareasale.com/r.cfm?b=1713710&amp;u=2748065&amp;m=97231&amp;urllink=&amp;afftrack="><img src="<?php echo CHONEYPOT4CF7_PLUGIN_DIR_URL; ?>/includes/images/banners/semrush-1_720x90.gif" border="0" alt="Tools for Any SEO Challenge" /></a>
-			</div>
-			<div class="choneypot4cf7__banner-ad choneypot4cf7__banner-ad--1b">
-				<a target="_blank" href="https://shareasale.com/r.cfm?b=1714372&amp;u=2748065&amp;m=97231&amp;urllink=&amp;afftrack="><img src="<?php echo CHONEYPOT4CF7_PLUGIN_DIR_URL; ?>/includes/images/banners/semrush-1_580x400.gif" border="0" /></a>
-			</div>
 			<div class="choneypot4cf7-admin__box choneypot4cf7-admin__box--count-message">
 				<p>
 					<span class="dashicons dashicons-chart-area"></span> 
@@ -303,43 +293,6 @@ function choneypot4cf7_admin_page() {
 					); 
 					?>
 				</p>
-			</div>
-		</div>
-
-		<div class="choneypot4cf7-admin__secondary">
-			<div class="choneypot4cf7-admin__box choneypot4cf7-admin__box--coffee">
-				<p class="choneypot4cf7-admin__coffee-message">
-					<?php esc_html_e( 'Do you like Honeypot for CF7? Consider showing your support:', 'classic-honeypot-for-cf7' ); ?><br>
-					<a href="http://www.nocean.ca/buy-us-a-coffee/" target="_blank" class="button button-primary"><strong>
-						<span class="dashicons dashicons-coffee"></span> <?php esc_html_e( 'Buy Us a Coffee', 'classic-honeypot-for-cf7' ); ?>
-					</strong></a>
-				</p>
-			</div>
-			<div class="choneypot4cf7-admin__box">
-				<h3><?php esc_html_e( 'Recommended', 'classic-honeypot-for-cf7' ); ?></h3>
-				<div class="choneypot4cf7__banner-ad choneypot4cf7__banner-ad--2">
-					<a target="_blank" href="https://www.amazon.com/dp/0316380520?&tag=nocean-hp-20"><img src="<?php echo CHONEYPOT4CF7_PLUGIN_DIR_URL; ?>/includes/images/banners/art-of-invisibility-cover.jpg" border="0" /></a>
-					<p>Not spam related, but an essential read for anyone that values online privacy and digital security.</p>
-				</div>
-			</div>
-
-			<div class="choneypot4cf7-admin__box choneypot4cf7-admin__rate-us">
-				<div class="choneypot4cf7-admin__stars">
-					<a target="_blank" href="https://wordpress.org/support/plugin/contact-form-7-honeypot/reviews/?filter=5#new-post">
-						<span class="dashicons dashicons-star-filled"></span>
-						<span class="dashicons dashicons-star-filled"></span>
-						<span class="dashicons dashicons-star-filled"></span>
-						<span class="dashicons dashicons-star-filled"></span>
-						<span class="dashicons dashicons-star-filled"></span>
-					</a>
-				</div>
-				<?php 
-				printf(
-					/* translators: %s: Plugin's reviews page link */
-					__( 'Please rate us on %s. Thanks!!', 'classic-honeypot-for-cf7' ),
-					'<a target="_blank" href="https://wordpress.org/support/plugin/contact-form-7-honeypot/reviews/?filter=5#new-post">wordpress.org</a>'
-				);
-				?>
 			</div>
 		</div>
 	</div>
