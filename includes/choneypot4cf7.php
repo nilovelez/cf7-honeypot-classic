@@ -13,189 +13,256 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- *
- * Initialize the shortcode
- * 		This lets CF7 know about Mr. Honeypot.
- * 
+ * Register the [honeypot] form tag with Contact Form 7.
  */
-add_action( 'wpcf7_init', 'choneypot4cf7_add_form_tag', 10 );
 function choneypot4cf7_add_form_tag() {
-	
-	$choneypot4cf7_config = choneypot4cf7_get_config();
-	$do_not_store = ( empty( $choneypot4cf7_config['store_honeypot'] ) ) ? true : false;
+	$config = choneypot4cf7_get_config();
 
 	wpcf7_add_form_tag(
 		'honeypot',
 		'choneypot4cf7_form_tag_handler',
 		array(
-			'name-attr' => true,
-			'do-not-store' => $do_not_store,
+			'name-attr'    => true,
+			'do-not-store' => ! $config['store_honeypot'],
 			'not-for-mail' => true,
 		)
 	);
 }
-
+add_action( 'wpcf7_init', 'choneypot4cf7_add_form_tag', 10 );
 
 /**
- * 
- * Form Tag handler
- * 		This is where we generate the honeypot HTML from the shortcode options
- * 
+ * Read a true/false option of a form tag, such as "nomessage:true".
+ *
+ * @param WPCF7_FormTag $tag      Form tag.
+ * @param string        $option   Option name.
+ * @param bool          $fallback Value to use when the tag does not set the option.
+ * @return bool
+ */
+function choneypot4cf7_get_tag_flag( $tag, $option, $fallback ) {
+	$value = $tag->get_option( $option, '', true );
+
+	if ( 'true' === $value ) {
+		return true;
+	}
+
+	if ( 'false' === $value ) {
+		return false;
+	}
+
+	return $fallback;
+}
+
+/**
+ * Get the settings of a honeypot field: the tag options, falling back to
+ * the global settings.
+ *
+ * The spam check uses this too, so the time check threshold always comes
+ * from the server and never from the submitted form.
+ *
+ * @param WPCF7_FormTag $tag Form tag.
+ * @return array
+ */
+function choneypot4cf7_get_tag_settings( $tag ) {
+	$config = choneypot4cf7_get_config();
+
+	$timecheck_value = absint( $tag->get_option( 'timecheck_value', 'int', true ) );
+	if ( $timecheck_value < 1 ) {
+		$timecheck_value = absint( $config['timecheck_value'] );
+	}
+
+	return array(
+		'validautocomplete' => choneypot4cf7_get_tag_flag( $tag, 'validautocomplete', $config['w3c_valid_autocomplete'] ),
+		'move_inline_css'   => choneypot4cf7_get_tag_flag( $tag, 'move-inline-css', $config['move_inline_css'] ),
+		'nomessage'         => choneypot4cf7_get_tag_flag( $tag, 'nomessage', $config['nomessage'] ),
+		'timecheck_enabled' => choneypot4cf7_get_tag_flag( $tag, 'timecheck_enabled', $config['timecheck_enabled'] ),
+		'timecheck_value'   => $timecheck_value,
+	);
+}
+
+/**
+ * Generate the HTML of a [honeypot] form tag.
+ *
+ * @param WPCF7_FormTag $tag Form tag.
+ * @return string
  */
 function choneypot4cf7_form_tag_handler( $tag ) {
-
 	if ( empty( $tag->name ) ) {
 		return '';
 	}
 
-	$validation_error = wpcf7_get_validation_error( $tag->name );
+	$config   = choneypot4cf7_get_config();
+	$settings = choneypot4cf7_get_tag_settings( $tag );
 
-	$choneypot4cf7_config = choneypot4cf7_get_config();
-
-	$class = wpcf7_form_controls_class( 'text' );
-	
 	$placeholder = (string) reset( $tag->values );
+	if ( '' === $placeholder ) {
+		$placeholder = $config['placeholder'];
+	}
 
-	$accessibility_message = ( ! empty( $choneypot4cf7_config['accessibility_message'] ) ) ? $choneypot4cf7_config['accessibility_message'] : __( 'Please leave this field empty.', 'classic-honeypot-for-cf7' );
+	$accessibility_message = $config['accessibility_message'];
+	if ( '' === $accessibility_message ) {
+		$accessibility_message = __( 'Please leave this field empty.', 'classic-honeypot-for-cf7' );
+	}
 
 	$atts = array(
-		'class' 			=> $tag->get_class_option( $class ),
-		'id'				=> $tag->get_option( 'id', 'id', true ),
-		'wrapper_id' 		=> $tag->get_option( 'wrapper-id' ),
-		'placeholder' 		=> ( $placeholder ) ? $placeholder : $choneypot4cf7_config['placeholder'],
-		'message' 			=> apply_filters( 'wpcf7_honeypot_accessibility_message', $accessibility_message ),
-		'name'				=> $tag->name,
-		'type'				=> $tag->type,
-		'validautocomplete'	=> ( $tag->get_option( 'validautocomplete' ) ) ? $tag->get_option( 'validautocomplete' ) : $choneypot4cf7_config['w3c_valid_autocomplete'],
-		'move_inline_css'	=> ( $tag->get_option( 'move-inline-css' ) ) ? $tag->get_option( 'move-inline-css' ) : $choneypot4cf7_config['move_inline_css'],
-		'nomessage'			=> ( $tag->get_option( 'nomessage' ) ) ? $tag->get_option( 'nomessage' ) : $choneypot4cf7_config['nomessage'],
-		'timecheck_enabled'	=> ( $tag->get_option( 'timecheck_enabled' ) ) ? $tag->get_option( 'timecheck_enabled' ) : $choneypot4cf7_config['timecheck_enabled'],
-		'timecheck_value'	=> ( $timecheck_value = $tag->get_option( 'timecheck_value' ) ) ? reset($timecheck_value) : $choneypot4cf7_config['timecheck_value'],
-		'validation_error'	=> $validation_error,
-		'css'				=> apply_filters( 'wpcf7_honeypot_container_css', 'display:none !important; visibility:hidden !important;' ),
+		'class'             => $tag->get_class_option( wpcf7_form_controls_class( 'text' ) ),
+		'id'                => $tag->get_option( 'id', 'id', true ),
+		'wrapper_id'        => $tag->get_option( 'wrapper-id', 'id', true ),
+		'placeholder'       => $placeholder,
+		'message'           => apply_filters( 'wpcf7_honeypot_accessibility_message', $accessibility_message ),
+		'name'              => $tag->name,
+		'type'              => $tag->type,
+		'validautocomplete' => $settings['validautocomplete'],
+		'move_inline_css'   => $settings['move_inline_css'],
+		'nomessage'         => $settings['nomessage'],
+		'timecheck_enabled' => $settings['timecheck_enabled'],
+		'timecheck_value'   => $settings['timecheck_value'],
+		'validation_error'  => wpcf7_get_validation_error( $tag->name ),
+		'css'               => apply_filters( 'wpcf7_honeypot_container_css', 'display:none !important; visibility:hidden !important;' ),
 	);
 
 	$unique_id = uniqid( 'wpcf7-' );
-	$wrapper_id = ( ! empty($atts['wrapper_id'] ) ) ? reset( $atts['wrapper_id'] ) : $unique_id . '-wrapper';
-	$input_placeholder = ( ! empty( $atts['placeholder'] ) ) ? ' placeholder="' . $atts['placeholder'] . '" ' : '';
-	$input_id = ( ! empty( $atts['id'] ) ) ? $atts['id'] : $unique_id . '-field';
-	$autocomplete_value = ( $atts['validautocomplete'][0] === 'true' ) ? 'off' : 'new-password';
 
-	// Check if we should move the CSS off the element and into the footer
-	if ( ! empty( $atts['move_inline_css'] ) && $atts['move_inline_css'][0] === 'true' ) {
-		$hp_css = '#' . $wrapper_id . ' {' . $atts['css'] . '}';
-		wp_register_style( $unique_id . '-inline', false );
-		wp_enqueue_style( $unique_id . '-inline' );
-		wp_add_inline_style( $unique_id . '-inline', $hp_css );
-		$el_css = '';
+	$wrapper_id = $atts['wrapper_id'];
+	if ( empty( $wrapper_id ) ) {
+		$wrapper_id = $unique_id . '-wrapper';
+	}
+
+	$input_id = $atts['id'];
+	if ( empty( $input_id ) ) {
+		$input_id = $unique_id . '-field';
+	}
+
+	// "new-password" stops browsers from autofilling the field better than
+	// the standard (but less effective) "off" value.
+	$autocomplete = $atts['validautocomplete'] ? 'off' : 'new-password';
+
+	// Hide the field with inline CSS, or move that CSS to the page footer.
+	if ( $atts['move_inline_css'] ) {
+		$handle = $unique_id . '-inline';
+		wp_register_style( $handle, false, array(), CHONEYPOT4CF7_VERSION );
+		wp_enqueue_style( $handle );
+		wp_add_inline_style( $handle, '#' . $wrapper_id . ' {' . $atts['css'] . '}' );
+		$style_attribute = '';
 	} else {
-		$el_css = 'style="' . $atts['css'] . '"';
+		$style_attribute = ' style="' . esc_attr( $atts['css'] ) . '"';
 	}
 
-	$html = '<span id="' . $wrapper_id . '" class="wpcf7-form-control-wrap ' . $atts['name'] . '-wrap" ' . $el_css . '>';
-	
-	if ( !empty( $atts['timecheck_enabled'] ) && $atts['timecheck_enabled'][0] !== 'false' ) {
-		$html .= '<input type="hidden" name="'.$atts['name'].'-time-start" value="'.time().'">';
-		$html .= '<input type="hidden" name="'.$atts['name'].'-time-check" value="'.$atts['timecheck_value'].'">';
+	$html = '<span id="' . esc_attr( $wrapper_id ) . '" class="wpcf7-form-control-wrap ' . esc_attr( $atts['name'] ) . '-wrap"' . $style_attribute . '>';
+
+	if ( $atts['timecheck_enabled'] ) {
+		$html .= '<input type="hidden" name="' . esc_attr( $atts['name'] ) . '-time-start" value="' . esc_attr( time() ) . '">';
 	}
 
-	if ( empty( $atts['nomessage'] ) || $atts['nomessage'][0] === 'false' ) {
-		$html .= '<label for="' . $input_id . '" class="hp-message">' . $atts['message'] . '</label>';
+	if ( ! $atts['nomessage'] ) {
+		$html .= '<label for="' . esc_attr( $input_id ) . '" class="hp-message">' . esc_html( $atts['message'] ) . '</label>';
 	}
 
-	$html .= '<input id="' . $input_id . '" ' . $input_placeholder . ' class="' . $atts['class'] . '" type="text" name="' . $atts['name'] . '" value="" size="40" tabindex="-1" autocomplete="'. $autocomplete_value . '" />';
-	$html .= $validation_error . '</span>';
+	$html .= '<input id="' . esc_attr( $input_id ) . '"';
+	if ( '' !== $atts['placeholder'] ) {
+		$html .= ' placeholder="' . esc_attr( $atts['placeholder'] ) . '"';
+	}
+	$html .= ' class="' . esc_attr( $atts['class'] ) . '" type="text" name="' . esc_attr( $atts['name'] ) . '" value="" size="40" tabindex="-1" autocomplete="' . esc_attr( $autocomplete ) . '" />';
+
+	// The validation error HTML comes from Contact Form 7, already escaped.
+	$html .= $atts['validation_error'] . '</span>';
 
 	// Hook for filtering finished Honeypot form element.
-	return apply_filters( 'wpcf7_honeypot_html_output' , $html, $atts );
+	return apply_filters( 'wpcf7_honeypot_html_output', $html, $atts );
 }
 
-
 /**
- * 
- * Honeypot Spam Check
- * 		Bots beware!
- * 
+ * Flag a submission as spam if a honeypot field was filled in, or if the
+ * form was submitted faster than the time check allows.
+ *
+ * Contact Form 7 verifies the request before running this filter.
+ *
+ * @param bool             $spam       Whether the submission is already spam.
+ * @param WPCF7_Submission $submission Current submission.
+ * @return bool
  */
-add_filter( 'wpcf7_spam', 'choneypot4cf7_spam_check', 10, 2 );
-
-function choneypot4cf7_spam_check( $spam, $submission = null ) {
-
-	if ( $spam ) {
+function choneypot4cf7_spam_check( $spam, $submission ) {
+	if ( $spam || ! $submission ) {
 		return $spam;
 	}
 
-	$cf7form = WPCF7_ContactForm::get_current();
-	$form_tags = $cf7form->scan_form_tags();
-	
-	foreach ( $form_tags as $tag ) {
-		if ( $tag->type == 'honeypot' ) {
-			$hp_ids[] = $tag->name;
+	$contact_form = $submission->get_contact_form();
+	if ( ! $contact_form ) {
+		return $spam;
+	}
+
+	$honeypot_tags = $contact_form->scan_form_tags( array( 'type' => 'honeypot' ) );
+
+	foreach ( $honeypot_tags as $tag ) {
+		if ( empty( $tag->name ) ) {
+			continue;
 		}
-	}
 
-	// Check if form has Honeypot fields, if not, exit
-	if ( empty( $hp_ids ) ) {
-		return $spam;
-	}
+		$settings = choneypot4cf7_get_tag_settings( $tag );
 
-	foreach ( $hp_ids as $hpid ) {
-		$value = isset( $_POST[$hpid] ) ? $_POST[$hpid] : '';
-		
+		// SPAM CHECK #1: Submission speed. A real browser always sends the
+		// start time, so a missing value means a bot built the request.
+		if ( $settings['timecheck_enabled'] ) {
+			$start_field = $tag->name . '-time-start';
 
-		// SPAM CHECK #1: Let's check submission speed first, as it's time sensitive. :)
-		$timecheck_start = isset( $_POST[$hpid.'-time-start'] ) ? $_POST[$hpid.'-time-start'] : '';
-
-		if ( $timecheck_start ) {
-			$submission_time = time();
-			$timecheck_value = isset( $_POST[$hpid.'-time-check'] ) ? $_POST[$hpid.'-time-check'] : '';
-			$submission_interval = $submission_time - $timecheck_start;
-			
-			if ( $submission_interval < $timecheck_value ) {
-				// Fast Bots!
-				$spam = true;
-				
-				if ( $submission ) {
-					$submission->add_spam_log( array(
-						'agent' => 'honeypot',
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified by Contact Form 7.
+			if ( ! isset( $_POST[ $start_field ] ) ) {
+				$submission->add_spam_log(
+					array(
+						'agent'  => 'honeypot',
 						'reason' => sprintf(
-							/* translators: 1: submission interval integer 2: honeypot field ID */
-							__( 'Honeypot detected form submitted too fast (%1$s seconds). Field ID = %2$s', 'classic-honeypot-for-cf7' ), 
-							$submission_interval,
-							$hpid
+							/* translators: %s: Honeypot field name. */
+							__( 'Honeypot time check field is missing. Field ID = %s', 'classic-honeypot-for-cf7' ),
+							$tag->name
 						),
-					) );
-				}
+					)
+				);
 
-				return $spam; // There's no need to go on, this is most likely a bot submission.
+				return true;
+			}
 
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified by Contact Form 7.
+			$start_time = absint( wp_unslash( $_POST[ $start_field ] ) );
+			$elapsed    = time() - $start_time;
+
+			if ( $elapsed < $settings['timecheck_value'] ) {
+				$submission->add_spam_log(
+					array(
+						'agent'  => 'honeypot',
+						'reason' => sprintf(
+							/* translators: 1: Seconds taken to submit the form. 2: Honeypot field name. */
+							__( 'Honeypot detected form submitted too fast (%1$s seconds). Field ID = %2$s', 'classic-honeypot-for-cf7' ),
+							$elapsed,
+							$tag->name
+						),
+					)
+				);
+
+				return true;
 			}
 		}
 
-		// SPAM CHECK #2: Now we check the honeypot!
-		if ( $value != '' ) {
-			// Chatty Bots!
-			$spam = true;
-			
-			if ( $submission ) {
-				$submission->add_spam_log( array(
-					'agent' => 'honeypot',
+		// SPAM CHECK #2: The honeypot itself. Any value, even "0", means a
+		// bot filled in the field.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified by Contact Form 7.
+		if ( isset( $_POST[ $tag->name ] ) && '' !== $_POST[ $tag->name ] ) {
+			$submission->add_spam_log(
+				array(
+					'agent'  => 'honeypot',
 					'reason' => sprintf(
-						/* translators: %s: honeypot field ID */
-						__( 'Something is stuck in the honey. Field ID = %s', 'classic-honeypot-for-cf7' ), 
-						$hpid
+						/* translators: %s: Honeypot field name. */
+						__( 'Something is stuck in the honey. Field ID = %s', 'classic-honeypot-for-cf7' ),
+						$tag->name
 					),
-				) );
-			}
+				)
+			);
 
-			return $spam; // There's no need to go on, we've got flies in the honey.
+			return true;
 		}
-
 	}
 
 	return $spam;
 }
-
+add_filter( 'wpcf7_spam', 'choneypot4cf7_spam_check', 10, 2 );
 
 /**
  * 
