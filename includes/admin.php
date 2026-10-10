@@ -115,8 +115,6 @@ function choneypot4cf7_get_config( $context = false ) {
 		'nomessage'							=> ( 'reset' == $context || empty( $choneypot4cf7_config['nomessage'] ) ) ?  array( 'false' ) : $choneypot4cf7_config['nomessage'],
 		'timecheck_enabled'					=> ( 'reset' == $context || empty( $choneypot4cf7_config['timecheck_enabled'] ) ) ?  array( 'false' ) : $choneypot4cf7_config['timecheck_enabled'],
 		'timecheck_value'					=> ( 'reset' == $context || empty( $choneypot4cf7_config['timecheck_value'] ) ) ?  4 : $choneypot4cf7_config['timecheck_value'],
-		'honeypot_count'					=> ( empty( $choneypot4cf7_config['honeypot_count'] ) ) ? 0 : $choneypot4cf7_config['honeypot_count'],
-		'honeypot_install_date'				=> ( empty( $choneypot4cf7_config['honeypot_install_date'] ) ) ? time() : $choneypot4cf7_config['honeypot_install_date'],
 		'honeypot_cf7_req_msg_dismissed'	=> ( 'reset' == $context || empty( $choneypot4cf7_config['honeypot_cf7_req_msg_dismissed'] ) ) ? 0 : $choneypot4cf7_config['honeypot_cf7_req_msg_dismissed'],
 		'choneypot4cf7_version'				=> CHONEYPOT4CF7_VERSION,
 	);
@@ -280,19 +278,6 @@ function choneypot4cf7_admin_page() {
 						
 					</p>
 				</form>
-			</div>
-			<div class="choneypot4cf7-admin__box choneypot4cf7-admin__box--count-message">
-				<p>
-					<span class="dashicons dashicons-chart-area"></span> 
-					<?php 
-					printf(
-						/* translators: 1: spam count 2: install date */
-						__( 'Honeypot has stopped %1$s spam submissions since %2$s', 'classic-honeypot-for-cf7' ),
-						'<strong>' . $choneypot4cf7_config['honeypot_count'] . '</strong>', 
-						date( get_option( 'date_format' ), $choneypot4cf7_config['honeypot_install_date'] )
-					); 
-					?>
-				</p>
 			</div>
 		</div>
 	</div>

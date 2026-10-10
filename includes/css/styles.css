@@ -50,16 +50,3 @@
 	border-bottom: 1px solid #ddd;
 	padding-top: 0;
 }
-
-#choneypot4cf7-admin-page .choneypot4cf7-admin__box--count-message p {
-	font-size: 18px;
-	text-align: center;
-	font-style: italic;
-}
-
-#choneypot4cf7-admin-page .choneypot4cf7-admin__box--count-message .dashicons {
-	color: #007cba;
-	font-size: 30px;
-	width: 30px;
-	height: 30px;
-}
