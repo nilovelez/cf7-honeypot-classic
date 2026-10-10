@@ -200,14 +200,3 @@ function choneypot4cf7_bootstrap() {
 	choneypot4cf7_maybe_import_settings();
 }
 add_action( 'plugins_loaded', 'choneypot4cf7_bootstrap' );
-
-/**
- * Delete the plugin configuration on uninstall.
- *
- * Defined here rather than in includes/admin.php because WordPress only
- * loads the main plugin file when uninstalling.
- */
-function choneypot4cf7_uninstall() {
-	delete_option( 'choneypot4cf7_config' );
-}
-register_uninstall_hook( CHONEYPOT4CF7_PLUGIN, 'choneypot4cf7_uninstall' );
