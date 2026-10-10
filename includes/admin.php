@@ -12,75 +12,6 @@
 
 defined( 'ABSPATH' ) || exit;
 
-/**
- *
- * Check if CF7 is installed and activated.
- * 		Deliver a message to install CF7 if not.
- * 
- */
-add_action( 'admin_init', 'choneypot4cf7_init' );
-function choneypot4cf7_init() {
-	// Get Options
-	$choneypot4cf7_config = choneypot4cf7_get_config();
-
-	// CF7 is not enabled
-	if ( is_admin() && current_user_can( 'activate_plugins' ) &&  !is_plugin_active( CHONEYPOT4CF7_DEP_PLUGIN ) && empty( $choneypot4cf7_config['honeypot_cf7_req_msg_dismissed'] ) ) {
-		add_action( 'admin_notices', 'choneypot4cf7_nocf7_notice' );
-	}
-
-	// CF7 is enabled, but it is OOOOOLD. Display message and deactivate Honeypot.
-	if ( is_admin() && current_user_can( 'activate_plugins' ) && is_plugin_active( CHONEYPOT4CF7_DEP_PLUGIN ) && defined('WPCF7_VERSION') && version_compare(WPCF7_VERSION, '3.0', '<' ) ) {
-		add_action( 'admin_notices', 'choneypot4cf7_oldcf7_notice' );
-		deactivate_plugins( CHONEYPOT4CF7_PLUGIN_BASENAME );
-	}
-
-	// This resets dismissed notice
-	if ( is_plugin_active( CHONEYPOT4CF7_DEP_PLUGIN ) && $choneypot4cf7_config['honeypot_cf7_req_msg_dismissed'] === 1 ) {
-		$choneypot4cf7_config['honeypot_cf7_req_msg_dismissed'] = 0;
-		update_option( 'choneypot4cf7_config', $choneypot4cf7_config );
-	}
-}
-
-function choneypot4cf7_nocf7_notice() { 
-	?>
-	<div class="notice error choneypot4cf7-notice is-dismissible">
-		<p>
-			<?php 
-			printf(
-				/* translators: %s: Link to Contact Form 7 plugin page. */
-				__('%s must be installed and activated for the Classic Honeypot for CF7 plugin to work', 'classic-honeypot-for-cf7'),
-				'<a href="'.admin_url('plugin-install.php?tab=search&s=contact+form+7').'">'.__('Contact Form 7','classic-honeypot-for-cf7').'</a>'
-			); 
-			?>
-		</p>
-	</div>
-	<?php
-}
-
-function choneypot4cf7_oldcf7_notice() { 
-	?>
-	<div class="notice error">
-		<p>
-			<?php 
-			printf(
-				/* translators: %s: Link to Contact Form 7 plugin page. */
-				__('The version of %s that is installed will not work with this version of Classic Honeypot for CF7.', 'classic-honeypot-for-cf7'),
-				'<a href="'.admin_url('plugin-install.php?tab=search&s=contact+form+7').'">'.__('Contact Form 7','classic-honeypot-for-cf7').'</a>'
-			); 
-			?>
-		</p>
-	</div>
-	<?php
-}
-
-
-add_action( 'wp_ajax_choneypot4cf7_dismiss_notice', 'choneypot4cf7_dismiss_notice' );
-function choneypot4cf7_dismiss_notice() {
-	$choneypot4cf7_config = choneypot4cf7_get_config();
-	$choneypot4cf7_config['honeypot_cf7_req_msg_dismissed'] = 1;
-	update_option( 'choneypot4cf7_config', $choneypot4cf7_config );
-}
-
 add_filter( 'plugin_action_links_'.CHONEYPOT4CF7_PLUGIN_BASENAME, 'choneypot4cf7_settings_link' );
 function choneypot4cf7_settings_link( $links ) {
 	$url = esc_url( add_query_arg(
@@ -115,7 +46,6 @@ function choneypot4cf7_get_config( $context = false ) {
 		'nomessage'							=> ( 'reset' == $context || empty( $choneypot4cf7_config['nomessage'] ) ) ?  array( 'false' ) : $choneypot4cf7_config['nomessage'],
 		'timecheck_enabled'					=> ( 'reset' == $context || empty( $choneypot4cf7_config['timecheck_enabled'] ) ) ?  array( 'false' ) : $choneypot4cf7_config['timecheck_enabled'],
 		'timecheck_value'					=> ( 'reset' == $context || empty( $choneypot4cf7_config['timecheck_value'] ) ) ?  4 : $choneypot4cf7_config['timecheck_value'],
-		'honeypot_cf7_req_msg_dismissed'	=> ( 'reset' == $context || empty( $choneypot4cf7_config['honeypot_cf7_req_msg_dismissed'] ) ) ? 0 : $choneypot4cf7_config['honeypot_cf7_req_msg_dismissed'],
 		'choneypot4cf7_version'				=> CHONEYPOT4CF7_VERSION,
 	);
 	
@@ -291,7 +221,6 @@ function choneypot4cf7_admin_page() {
 *
 *********** */
 function choneypot4cf7_admin_enqueues( $hook ) {
-	wp_enqueue_script( 'choneypot4cf7-admin-js', plugins_url( 'includes/js/notice-update.js', CHONEYPOT4CF7_PLUGIN ), array( 'jquery' ), CHONEYPOT4CF7_VERSION, true );
 	if ( strpos( $hook, 'choneypot4cf7' ) !== false ) {
 		 wp_enqueue_style( 'choneypot4cf7-admin-css', plugins_url( 'includes/css/styles.css', CHONEYPOT4CF7_PLUGIN ), array(), CHONEYPOT4CF7_VERSION, 'all' );
 	}

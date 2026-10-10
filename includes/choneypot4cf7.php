@@ -24,20 +24,15 @@ function choneypot4cf7_add_form_tag() {
 	$choneypot4cf7_config = choneypot4cf7_get_config();
 	$do_not_store = ( empty( $choneypot4cf7_config['store_honeypot'] ) ) ? true : false;
 
-	// Test if new 4.6+ functions exists
-	if ( function_exists( 'wpcf7_add_form_tag' ) ) {
-		wpcf7_add_form_tag( 
-			'honeypot', 
-			'choneypot4cf7_form_tag_handler', 
-			array( 
-				'name-attr' => true, 
-				'do-not-store' => $do_not_store,
-				'not-for-mail' => true,
-			)
-		);
-	} else {
-		wpcf7_add_shortcode( 'honeypot', 'choneypot4cf7_form_tag_handler', true );
-	}
+	wpcf7_add_form_tag(
+		'honeypot',
+		'choneypot4cf7_form_tag_handler',
+		array(
+			'name-attr' => true,
+			'do-not-store' => $do_not_store,
+			'not-for-mail' => true,
+		)
+	);
 }
 
 
@@ -48,9 +43,6 @@ function choneypot4cf7_add_form_tag() {
  * 
  */
 function choneypot4cf7_form_tag_handler( $tag ) {
-
-	// Test if new 4.6+ functions exists
-	$tag = ( class_exists( 'WPCF7_FormTag' ) ) ? new WPCF7_FormTag( $tag ) : new WPCF7_Shortcode( $tag );
 
 	if ( empty( $tag->name ) ) {
 		return '';
@@ -125,17 +117,7 @@ function choneypot4cf7_form_tag_handler( $tag ) {
  * 		Bots beware!
  * 
  */
-
-if ( version_compare(CHONEYPOT4CF7_WPCF7_VERSION, '5.3.0', '>=' ) ) {
-	// Newer Spam filter - with log
-	add_filter( 'wpcf7_spam', 'choneypot4cf7_spam_check', 10, 2 );
-} elseif ( version_compare(CHONEYPOT4CF7_WPCF7_VERSION, '3.0', '>=' ) ) {
-	// Older Spam filter - no log
-	add_filter( 'wpcf7_spam', 'choneypot4cf7_spam_check', 10, 1 );
-} else {
-	// Real old - unsupported
-	return false;
-}
+add_filter( 'wpcf7_spam', 'choneypot4cf7_spam_check', 10, 2 );
 
 function choneypot4cf7_spam_check( $spam, $submission = null ) {
 

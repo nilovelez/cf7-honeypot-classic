@@ -1,7 +1,7 @@
 === Classic Honeypot for CF7 ===
 Contributors: nilovelez
 Tags: honeypot, antispam, anti-spam, spam, contact form 7
-Requires at least: 6.0
+Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
 Requires Plugins: contact-form-7
@@ -101,7 +101,8 @@ The original plugin is no longer the simple honeypot it used to be. This fork ex
 * Kept the `[honeypot]` form tag and the `wpcf7_honeypot_*` filters for drop-in compatibility.
 * Settings are imported from the original plugin on first run.
 * The plugin stays inactive, with an admin notice, while the original plugin is active.
-* Added the `Requires Plugins: contact-form-7` header. Requires WordPress 6.0 and PHP 7.4.
+* Requires WordPress 6.5, PHP 7.4 and Contact Form 7 6.0 or later. Compatibility code for older versions of Contact Form 7 has been removed.
+* Added the `Requires Plugins: contact-form-7` header, which replaces the old "Contact Form 7 must be installed" notice and its dismiss script.
 * Removed all advertising from the settings page: affiliate banners, the "Recommended" book, the donation box, the rating request and the link to the original plugin's support forum.
 * Removed the spam counter. It wrote to the database on every blocked submission and could overwrite settings; the Contact Form 7 spam log (and Flamingo) already show what was blocked and why.
 

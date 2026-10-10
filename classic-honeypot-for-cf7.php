@@ -4,7 +4,7 @@
  * Plugin URI:        https://github.com/nilovelez/cf7-honeypot-classic
  * Description:       Adds a honeypot anti-spam field to Contact Form 7 forms. A lean fork of Honeypot for Contact Form 7 2.1.1 by Nocean.
  * Version:           1.0.0
- * Requires at least: 6.0
+ * Requires at least: 6.5
  * Requires PHP:      7.4
  * Requires Plugins:  contact-form-7
  * Author:            Nilo Vélez
@@ -39,10 +39,8 @@ defined( 'ABSPATH' ) || exit;
 define( 'CHONEYPOT4CF7_VERSION', '1.0.0' );
 define( 'CHONEYPOT4CF7_PLUGIN', __FILE__ );
 define( 'CHONEYPOT4CF7_PLUGIN_BASENAME', plugin_basename( CHONEYPOT4CF7_PLUGIN ) );
-define( 'CHONEYPOT4CF7_PLUGIN_NAME', trim( dirname( CHONEYPOT4CF7_PLUGIN_BASENAME ), '/' ) );
 define( 'CHONEYPOT4CF7_PLUGIN_DIR', untrailingslashit( dirname( CHONEYPOT4CF7_PLUGIN ) ) );
-define( 'CHONEYPOT4CF7_PLUGIN_DIR_URL', untrailingslashit( plugin_dir_url( CHONEYPOT4CF7_PLUGIN ) ) );
-define( 'CHONEYPOT4CF7_DEP_PLUGIN', 'contact-form-7/wp-contact-form-7.php' );
+define( 'CHONEYPOT4CF7_MIN_WPCF7_VERSION', '6.0' );
 
 /**
  * Check whether the original "Honeypot for Contact Form 7" plugin (any
@@ -71,6 +69,28 @@ function choneypot4cf7_original_plugin_notice() {
 		<p>
 			<?php
 			esc_html_e( 'Classic Honeypot for CF7 is not running because the original "Honeypot for Contact Form 7" (CF7 Apps) plugin is active. Please deactivate it first. Your settings will be imported automatically.', 'classic-honeypot-for-cf7' );
+			?>
+		</p>
+	</div>
+	<?php
+}
+
+/**
+ * Admin notice shown when the installed Contact Form 7 is too old.
+ */
+function choneypot4cf7_old_cf7_notice() {
+	if ( ! current_user_can( 'activate_plugins' ) ) {
+		return;
+	}
+	?>
+	<div class="notice notice-error">
+		<p>
+			<?php
+			printf(
+				/* translators: %s: Minimum required Contact Form 7 version. */
+				esc_html__( 'Classic Honeypot for CF7 is not running because it requires Contact Form 7 version %s or later. Please update Contact Form 7.', 'classic-honeypot-for-cf7' ),
+				esc_html( CHONEYPOT4CF7_MIN_WPCF7_VERSION )
+			);
 			?>
 		</p>
 	</div>
@@ -140,19 +160,15 @@ function choneypot4cf7_bootstrap() {
 		return;
 	}
 
-	if ( defined( 'WPCF7_VERSION' ) ) {
-		define( 'CHONEYPOT4CF7_WPCF7_VERSION', WPCF7_VERSION );
-	} else {
-		$path_to_cf7 = WP_PLUGIN_DIR . '/' . CHONEYPOT4CF7_DEP_PLUGIN;
-		if ( file_exists( $path_to_cf7 ) ) {
-			$cf7_plugin_data = get_file_data( $path_to_cf7, array( 'Version' => 'Version' ), 'plugin' );
-		}
+	// The "Requires Plugins" header makes sure Contact Form 7 is active.
+	// This check only guards against fatal errors if it is not loaded anyway.
+	if ( ! defined( 'WPCF7_VERSION' ) ) {
+		return;
+	}
 
-		if ( ! empty( $cf7_plugin_data['Version'] ) ) {
-			define( 'CHONEYPOT4CF7_WPCF7_VERSION', $cf7_plugin_data['Version'] );
-		} else {
-			define( 'CHONEYPOT4CF7_WPCF7_VERSION', '0.0.0' );
-		}
+	if ( version_compare( WPCF7_VERSION, CHONEYPOT4CF7_MIN_WPCF7_VERSION, '<' ) ) {
+		add_action( 'admin_notices', 'choneypot4cf7_old_cf7_notice' );
+		return;
 	}
 
 	choneypot4cf7_maybe_import_settings();
