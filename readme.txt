@@ -102,6 +102,7 @@ The original plugin is no longer the simple honeypot it used to be. This fork ex
 * Settings are imported from the original plugin on first run.
 * The plugin stays inactive, with an admin notice, while the original plugin is active.
 * Added the `Requires Plugins: contact-form-7` header. Requires WordPress 6.0 and PHP 7.4.
+* Removed all advertising from the settings page: affiliate banners, the "Recommended" book, the donation box, the rating request and the link to the original plugin's support forum.
 
 = Changelog of the original plugin (Honeypot for Contact Form 7, by Nocean) =
 
