@@ -222,16 +222,34 @@ function choneypot4cf7_spam_check( $spam, $submission ) {
 
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified by Contact Form 7.
 			$start_time = absint( wp_unslash( $_POST[ $start_field ] ) );
-			$elapsed    = time() - $start_time;
+
+			// A start time in the future can only come from a forged request.
+			if ( $start_time > time() ) {
+				$submission->add_spam_log(
+					array(
+						'agent'  => 'honeypot',
+						'reason' => sprintf(
+							/* translators: %s: Honeypot field name. */
+							__( 'Honeypot detected a start time in the future. Field ID = %s', 'classic-honeypot-for-cf7' ),
+							$tag->name
+						),
+					)
+				);
+
+				return true;
+			}
+
+			$elapsed = time() - $start_time;
 
 			if ( $elapsed < $settings['timecheck_value'] ) {
 				$submission->add_spam_log(
 					array(
 						'agent'  => 'honeypot',
 						'reason' => sprintf(
-							/* translators: 1: Seconds taken to submit the form. 2: Honeypot field name. */
-							__( 'Honeypot detected form submitted too fast (%1$s seconds). Field ID = %2$s', 'classic-honeypot-for-cf7' ),
+							/* translators: 1: Seconds taken to submit the form. 2: Minimum seconds required. 3: Honeypot field name. */
+							__( 'Honeypot detected form submitted too fast (%1$s seconds, minimum %2$s). Field ID = %3$s', 'classic-honeypot-for-cf7' ),
 							$elapsed,
+							$settings['timecheck_value'],
 							$tag->name
 						),
 					)
@@ -265,140 +283,117 @@ function choneypot4cf7_spam_check( $spam, $submission ) {
 add_filter( 'wpcf7_spam', 'choneypot4cf7_spam_check', 10, 2 );
 
 /**
- * 
- * Tag generator & handler
- * 		Adds Honeypot to the CF7 form editor
- * 
+ * Add the "Honeypot" button to the Contact Form 7 form editor.
  */
-add_action( 'wpcf7_admin_init', 'choneypot4cf7_generate_form_tag', 10, 0 );
-
-function choneypot4cf7_generate_form_tag() {
+function choneypot4cf7_add_tag_generator() {
 	$tag_generator = WPCF7_TagGenerator::get_instance();
-	$tag_generator->add( 'honeypot', __( 'Honeypot', 'classic-honeypot-for-cf7' ), 'choneypot4cf7_form_tag_generator' );
+
+	$tag_generator->add(
+		'honeypot',
+		__( 'Honeypot', 'classic-honeypot-for-cf7' ),
+		'choneypot4cf7_tag_generator',
+		array( 'version' => '2' )
+	);
 }
+add_action( 'wpcf7_admin_init', 'choneypot4cf7_add_tag_generator', 50, 0 );
 
-function choneypot4cf7_form_tag_generator( $contact_form, $args = '' ) {
-	$args = wp_parse_args( $args, array() );
-	$description = __( 'Generate a form-tag for a spam-stopping honeypot field. For more details, see %s.', 'classic-honeypot-for-cf7' );
-	$desc_link = '<a href="https://wordpress.org/plugins/classic-honeypot-for-cf7/" target="_blank">' . __( 'Classic Honeypot for CF7', 'classic-honeypot-for-cf7' ) . '</a>';
+/**
+ * Render the honeypot form-tag generator dialog.
+ *
+ * Uses the version 2 tag generator API of Contact Form 7 6.0. Each input
+ * with data-tag-part="option" adds its data-tag-option to the tag: checkboxes
+ * add it when checked, and options ending in ":" get the input value.
+ *
+ * @param WPCF7_ContactForm $contact_form Current contact form.
+ * @param array             $options      Tag generator options.
+ */
+function choneypot4cf7_tag_generator( $contact_form, $options ) {
+	$tgg = new WPCF7_TagGeneratorGenerator( $options['content'] );
+
+	$settings_url  = add_query_arg( 'page', 'choneypot4cf7', admin_url( 'admin.php' ) );
+	$settings_link = '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Honeypot Settings', 'classic-honeypot-for-cf7' ) . '</a>';
 	?>
+	<header class="description-box">
+		<h3><?php esc_html_e( 'Honeypot form-tag generator', 'classic-honeypot-for-cf7' ); ?></h3>
+		<p>
+			<?php
+			echo wp_kses(
+				sprintf(
+					/* translators: %s: Link to the honeypot settings page. */
+					__( 'Generate a form-tag for a spam-stopping honeypot field. Check out %s for more settings/info.', 'classic-honeypot-for-cf7' ),
+					$settings_link
+				),
+				array( 'a' => array( 'href' => array() ) )
+			);
+			?>
+		</p>
+	</header>
+
 	<div class="control-box">
+		<?php
+		$tgg->print(
+			'field_type',
+			array(
+				'select_options' => array(
+					'honeypot' => __( 'Honeypot', 'classic-honeypot-for-cf7' ),
+				),
+			)
+		);
+
+		$tgg->print( 'field_name' );
+		?>
+		<p class="description"><?php esc_html_e( 'For better security, change "honeypot" to something more appealing to a bot, such as text including "email" or "website".', 'classic-honeypot-for-cf7' ); ?></p>
+
+		<?php
+		$tgg->print( 'id_attr' );
+
+		$tgg->print( 'class_attr' );
+		?>
+
 		<fieldset>
-			<legend>
-				<?php 
-				$honeypotcf7_config_url = esc_url( add_query_arg('page','choneypot4cf7',get_admin_url() . 'admin.php') );
-				$honeypotcf7_settings_link = "<a href='$honeypotcf7_config_url'>" . __( 'Honeypot Settings', 'classic-honeypot-for-cf7' ) . '</a>';
-				printf(
-					/* translators: %s: Link to Honeypot settings page */
-					esc_html( __( 'Generate a form-tag for a spam-stopping honeypot field. Check out %s for more settings/info.', 'classic-honeypot-for-cf7' ) ),
-					$honeypotcf7_settings_link
-				); 
-				?>
-			</legend>
+			<legend id="<?php echo esc_attr( $tgg->ref( 'wrapper-id-legend' ) ); ?>"><?php esc_html_e( 'Wrapper ID', 'classic-honeypot-for-cf7' ); ?></legend>
+			<input type="text" data-tag-part="option" data-tag-option="wrapper-id:" pattern="[A-Za-z][A-Za-z0-9_\-]*" aria-labelledby="<?php echo esc_attr( $tgg->ref( 'wrapper-id-legend' ) ); ?>" />
+		</fieldset>
 
-			<table class="form-table form-table--honeypotcf7"><tbody>
-				<tr>
-					<th style="width:50%;" scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-name' ); ?>"><?php esc_html_e( 'Name', 'classic-honeypot-for-cf7' ); ?></label>
-					</th>
-					<td>
-						<input type="text" name="name" class="tg-name oneline" id="<?php echo esc_attr( $args['content'] . '-name' ); ?>" /><br>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2"><em><?php esc_html_e( 'For better security, change "honeypot" to something more appealing to a bot, such as text including "email" or "website".', 'classic-honeypot-for-cf7' ); ?></em></td>
-				</tr>
+		<fieldset>
+			<legend id="<?php echo esc_attr( $tgg->ref( 'placeholder-legend' ) ); ?>"><?php esc_html_e( 'Placeholder', 'classic-honeypot-for-cf7' ); ?></legend>
+			<input type="text" data-tag-part="value" aria-labelledby="<?php echo esc_attr( $tgg->ref( 'placeholder-legend' ) ); ?>" />
+		</fieldset>
 
-				<tr style="background:#efefef;">
-					<td colspan="2" style="text-transform:uppercase;text-align:center;font-weight:bold;padding-top:5px;padding-bottom:5px;">
-						<?php esc_html_e( 'Optional Settings', 'classic-honeypot-for-cf7' ); ?>
-					</td>
-				</tr>
+		<fieldset>
+			<legend><?php esc_html_e( 'Optional settings', 'classic-honeypot-for-cf7' ); ?></legend>
+			<label>
+				<input type="checkbox" data-tag-part="option" data-tag-option="validautocomplete:true" />
+				<?php esc_html_e( 'Use Standard Autocomplete Value', 'classic-honeypot-for-cf7' ); ?>
+			</label>
+			<br />
+			<label>
+				<input type="checkbox" data-tag-part="option" data-tag-option="move-inline-css:true" />
+				<?php esc_html_e( 'Move Inline CSS', 'classic-honeypot-for-cf7' ); ?>
+			</label>
+			<br />
+			<label>
+				<input type="checkbox" data-tag-part="option" data-tag-option="nomessage:true" />
+				<?php esc_html_e( 'Disable Accessibility Label', 'classic-honeypot-for-cf7' ); ?>
+			</label>
+		</fieldset>
 
-				<tr>
-					<th style="width:50%;" scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-id' ); ?>"><?php esc_html_e( 'ID', 'classic-honeypot-for-cf7' ); ?></label>
-					</th>
-					<td>
-						<input type="text" name="id" class="idvalue oneline option" id="<?php echo esc_attr( $args['content'] . '-id' ); ?>" />
-					</td>
-				</tr>
-
-				<tr>
-					<th style="width:50%;" scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-class' ); ?>"><?php esc_html_e( 'Class', 'classic-honeypot-for-cf7' ); ?></label>
-					</th>
-					<td>
-						<input type="text" name="class" class="classvalue oneline option" id="<?php echo esc_attr( $args['content'] . '-class' ); ?>" />
-					</td>
-				</tr>
-
-				<tr>
-					<th style="width:50%;" scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-wrapper-id' ); ?>"><?php esc_html_e( 'Wrapper ID', 'classic-honeypot-for-cf7' ); ?></label>
-					</th>
-					<td>
-						<input type="text" name="wrapper-id" class="wrapper-id-value oneline option" id="<?php echo esc_attr( $args['content'] . '-wrapper-id' ); ?>" /><br>
-					</td>
-				</tr>
-
-				<tr>
-					<th style="width:50%;" scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-values' ); ?>"><?php echo esc_html( __( 'Placeholder', 'classic-honeypot-for-cf7' ) ); ?></label>
-					</th>
-					<td>
-						<input type="text" name="values" class="oneline" id="<?php echo esc_attr( $args['content'] . '-values' ); ?>" />
-					</td>
-				</tr>
-
-				<tr>
-					<th style="width:50%;" scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-validautocomplete' ); ?>"><?php esc_html_e( 'Use Standard Autocomplete Value', 'classic-honeypot-for-cf7' ); ?></label>
-					</th>
-					<td>
-						<input type="checkbox" name="validautocomplete:true" id="<?php echo esc_attr( $args['content'] . '-validautocomplete' ); ?>" class="validautocompletevalue option" />
-					</td>
-				</tr>
-
-				<tr>
-					<th style="width:50%;" scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-move-inline-css' ); ?>"><?php esc_html_e( 'Move inline CSS', 'classic-honeypot-for-cf7' ); ?></label>
-					</th>
-					<td>
-						<input type="checkbox" name="move-inline-css:true" id="<?php echo esc_attr( $args['content'] . '-move-inline-css' ); ?>" class="move-inline-css-value option" />
-					</td>
-				</tr>
-
-				<tr>
-					<th style="width:50%;" scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-nomessage' ); ?>"><?php esc_html_e( 'Disable Accessibility Label', 'classic-honeypot-for-cf7' ); ?></label>
-					</th>
-					<td>
-						<input type="checkbox" name="nomessage:true" id="<?php echo esc_attr( $args['content'] . '-nomessage' ); ?>" class="messagekillvalue option" />
-					</td>
-				</tr>
-
-				<tr>
-					<th style="width:50%;" scope="row">
-						<label for="<?php echo esc_attr( $args['content'] . '-timecheck-enabled' ); ?>"><?php esc_html_e( 'Enable Time Check', 'classic-honeypot-for-cf7' ); ?></label>
-					</th>
-					<td>
-						<input type="checkbox" name="timecheck_enabled:true" id="<?php echo esc_attr( $args['content'] . '-timecheck-enabled' ); ?>" class="option" />
-						<input type="number" step="1" min="1" placeholder="4" value="" name="timecheck_value" class="oneline option" id="<?php echo esc_attr( $args['content'] . '-timecheck-value' ); ?>" /> <?php esc_html_e('seconds', 'classic-honeypot-for-cf7'); ?>
-					</td>
-				</tr>
-
-			</tbody></table>
+		<fieldset>
+			<legend id="<?php echo esc_attr( $tgg->ref( 'timecheck-legend' ) ); ?>"><?php esc_html_e( 'Time Check', 'classic-honeypot-for-cf7' ); ?></legend>
+			<label>
+				<input type="checkbox" data-tag-part="option" data-tag-option="timecheck_enabled:true" />
+				<?php esc_html_e( 'Enable Time Check', 'classic-honeypot-for-cf7' ); ?>
+			</label>
+			<br />
+			<label>
+				<input type="number" min="1" step="1" placeholder="4" data-tag-part="option" data-tag-option="timecheck_value:" />
+				<?php esc_html_e( 'seconds', 'classic-honeypot-for-cf7' ); ?>
+			</label>
 		</fieldset>
 	</div>
 
-	<div class="insert-box">
-		<input type="text" name="honeypot" class="tag code" readonly="readonly" onfocus="this.select()" />
-
-		<div class="submitbox">
-			<input type="button" class="button button-primary insert-tag" value="<?php esc_attr_e( 'Insert Tag', 'classic-honeypot-for-cf7' ); ?>" />
-		</div>
-
-		<br class="clear" />
-	</div>
-<?php }
+	<footer class="insert-box">
+		<?php $tgg->print( 'insert_box_content' ); ?>
+	</footer>
+	<?php
+}

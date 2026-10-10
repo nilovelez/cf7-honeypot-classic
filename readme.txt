@@ -110,6 +110,8 @@ The original plugin is no longer the simple honeypot it used to be. This fork ex
 * Removed all advertising from the settings page: affiliate banners, the "Recommended" book, the donation box, the rating request and the link to the original plugin's support forum.
 * Security: all settings are sanitized when saved, and all output (settings page and honeypot field HTML) is escaped.
 * Security: the time check threshold is read on the server. The form no longer sends it, so bots can't change it, and a submission without the start time is treated as spam.
+* New form-tag generator for the Contact Form 7 6.0 editor (tag generator API version 2), written from scratch.
+* Time check: a start time in the future is treated as spam, and the spam log shows the minimum number of seconds required.
 * Fixed a possible fatal error in the spam check when Contact Form 7 had no current form.
 * A honeypot value of "0" is now treated as spam.
 * "Reset to Defaults" no longer re-imports the settings of the original plugin.
