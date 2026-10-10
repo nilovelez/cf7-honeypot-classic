@@ -98,7 +98,8 @@ function choneypot4cf7_old_cf7_notice() {
 }
 
 /**
- * Import the settings of the original plugin the first time this plugin runs.
+ * Create the settings the first time this plugin runs, importing the
+ * settings of the original plugin if there are any.
  *
  * Versions up to 2.x store them in the "honeypot4cf7_config" option. Version
  * 3.x stores them in "cf7apps_settings" under the "honeypot" key, using
@@ -110,44 +111,66 @@ function choneypot4cf7_maybe_import_settings() {
 		return;
 	}
 
-	$imported = array();
-
 	$cf7apps_settings = get_option( 'cf7apps_settings' );
 	$legacy_config    = get_option( 'honeypot4cf7_config' );
 
 	if ( is_array( $cf7apps_settings ) && ! empty( $cf7apps_settings['honeypot'] ) && is_array( $cf7apps_settings['honeypot'] ) ) {
-		$settings = $cf7apps_settings['honeypot'];
-		$as_flag  = function ( $key ) use ( $settings ) {
-			return ( ! empty( $settings[ $key ] ) && 1 == $settings[ $key ] ) ? array( 'true' ) : array( 'false' );
-		};
+		$old = $cf7apps_settings['honeypot'];
 
-		$imported = array(
-			'store_honeypot'         => empty( $settings['store_value'] ) ? 0 : 1,
-			'placeholder'            => isset( $settings['global_placeholder'] ) ? (string) $settings['global_placeholder'] : '',
-			'accessibility_message'  => isset( $settings['accessibility_msg'] ) ? (string) $settings['accessibility_msg'] : '',
-			'w3c_valid_autocomplete' => $as_flag( 'standard_auto_complete' ),
-			'move_inline_css'        => $as_flag( 'inline_css' ),
-			'nomessage'              => $as_flag( 'accessibility_label' ),
-			'timecheck_enabled'      => $as_flag( 'enable_time_check' ),
-			'timecheck_value'        => isset( $settings['time_check'] ) ? (int) $settings['time_check'] : 4,
+		$old_config = array(
+			'store_honeypot'         => isset( $old['store_value'] ) ? $old['store_value'] : false,
+			'placeholder'            => isset( $old['global_placeholder'] ) ? $old['global_placeholder'] : '',
+			'accessibility_message'  => isset( $old['accessibility_msg'] ) ? $old['accessibility_msg'] : '',
+			'w3c_valid_autocomplete' => isset( $old['standard_auto_complete'] ) ? $old['standard_auto_complete'] : false,
+			'move_inline_css'        => isset( $old['inline_css'] ) ? $old['inline_css'] : false,
+			'nomessage'              => isset( $old['accessibility_label'] ) ? $old['accessibility_label'] : false,
+			'timecheck_enabled'      => isset( $old['enable_time_check'] ) ? $old['enable_time_check'] : false,
+			'timecheck_value'        => isset( $old['time_check'] ) ? $old['time_check'] : 0,
 		);
 	} elseif ( is_array( $legacy_config ) ) {
-		$keys     = array(
-			'store_honeypot',
-			'placeholder',
-			'accessibility_message',
-			'w3c_valid_autocomplete',
-			'move_inline_css',
-			'nomessage',
-			'timecheck_enabled',
-			'timecheck_value',
-		);
-		$imported = array_intersect_key( $legacy_config, array_flip( $keys ) );
+		$old_config = $legacy_config;
+	} else {
+		// Nothing to import: store the defaults so the import runs only once.
+		$old_config = array();
 	}
 
-	if ( ! empty( $imported ) ) {
-		add_option( 'choneypot4cf7_config', $imported );
+	$defaults   = choneypot4cf7_get_defaults();
+	$old_config = wp_parse_args( $old_config, $defaults );
+
+	$timecheck_value = absint( $old_config['timecheck_value'] );
+	if ( $timecheck_value < 1 ) {
+		$timecheck_value = $defaults['timecheck_value'];
 	}
+
+	$config = array(
+		'store_honeypot'         => choneypot4cf7_import_flag( $old_config['store_honeypot'] ),
+		'placeholder'            => sanitize_text_field( $old_config['placeholder'] ),
+		'accessibility_message'  => sanitize_text_field( $old_config['accessibility_message'] ),
+		'w3c_valid_autocomplete' => choneypot4cf7_import_flag( $old_config['w3c_valid_autocomplete'] ),
+		'move_inline_css'        => choneypot4cf7_import_flag( $old_config['move_inline_css'] ),
+		'nomessage'              => choneypot4cf7_import_flag( $old_config['nomessage'] ),
+		'timecheck_enabled'      => choneypot4cf7_import_flag( $old_config['timecheck_enabled'] ),
+		'timecheck_value'        => $timecheck_value,
+	);
+
+	add_option( 'choneypot4cf7_config', $config );
+}
+
+/**
+ * Convert a flag stored by the original plugin to a boolean.
+ *
+ * Version 2.x stores flags as array( 'true' ) or array( 'false' ), and 1 or 0
+ * for "store_honeypot". Version 3.x stores them as 1 or 0.
+ *
+ * @param mixed $value Stored value.
+ * @return bool
+ */
+function choneypot4cf7_import_flag( $value ) {
+	if ( is_array( $value ) ) {
+		$value = reset( $value );
+	}
+
+	return ( 'true' === $value || 1 === (int) $value );
 }
 
 /**
@@ -171,10 +194,10 @@ function choneypot4cf7_bootstrap() {
 		return;
 	}
 
-	choneypot4cf7_maybe_import_settings();
-
 	require_once CHONEYPOT4CF7_PLUGIN_DIR . '/includes/admin.php';
 	require_once CHONEYPOT4CF7_PLUGIN_DIR . '/includes/choneypot4cf7.php';
+
+	choneypot4cf7_maybe_import_settings();
 }
 add_action( 'plugins_loaded', 'choneypot4cf7_bootstrap' );
 
