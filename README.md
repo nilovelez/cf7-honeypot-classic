@@ -54,7 +54,17 @@ The test form is at `http://127.0.0.1:9400/honeypot-test/`. Log in with `admin` 
 
 On Windows, use `--mount-dir . /wordpress/wp-content/plugins/classic-honeypot-for-cf7` instead of `--mount`, because `--mount` does not accept drive letters.
 
-Development files such as this README, the blueprint and the project notes are excluded from the release zip through `export-ignore` rules in `.gitattributes`.
+### Building the release zip
+
+The release zip is built with `git archive` from the repository root:
+
+```sh
+git archive --format=zip --prefix=classic-honeypot-for-cf7/ -o classic-honeypot-for-cf7.zip HEAD
+```
+
+- `--prefix` puts the files inside a `classic-honeypot-for-cf7/` folder, as WordPress expects when uploading a plugin zip.
+- Development files, such as this README, the blueprint and the project notes, are left out through `export-ignore` rules in `.gitattributes`. To leave out a new development file, add it there.
+- Only committed files are included: commit your changes before building the zip.
 
 ## License
 
