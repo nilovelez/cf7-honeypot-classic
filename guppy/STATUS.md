@@ -1,7 +1,7 @@
 ---
-estado: activo
-siguiente_paso: Definir y autorizar el hito 6.
-bloqueo: ""
+estado: bloqueado
+siguiente_paso: Aplicar los cambios menores que indique Nilo (p. ej. nuevo icono) y preparar la publicación en el directorio de plugins de WordPress.org.
+bloqueo: "Nilo revisa el plugin y pasa la lista de cambios menores."
 actualizado: 2026-10-11
 ---
 
@@ -10,6 +10,8 @@ actualizado: 2026-10-11
 Fork GPL de Honeypot for Contact Form 7 2.1.1 (Nocean), renombrado como Classic Honeypot for CF7 y sin publicidad. Hitos 1 a 5 terminados y mergeados en `main`. El hito 5 montó el entorno de desarrollo (Playground con blueprint, sitio de Studio enlazado al repo y accesible desde la red local, MCP Adapter conectado a Claude Code), que servirá de base para una skill pública. Carpeta local y repo de GitHub renombrados al slug `classic-honeypot-for-cf7`.
 
 ## Diario
+
+- 2026-10-11: Decidido no añadir abilities (Abilities API) al plugin. Queda: revisión de Nilo, cambios menores (icono) y publicación en WordPress.org.
 
 - 2026-10-11: Hito 5 cerrado: MCP probado desde una sesión nueva de Claude Code; `feature/dev-environment` mergeada en `main`.
 
