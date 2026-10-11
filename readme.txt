@@ -112,6 +112,7 @@ The original plugin is no longer the simple honeypot it used to be. This fork ex
 * Security: the time check threshold is read on the server. The form no longer sends it, so bots can't change it, and a submission without the start time is treated as spam.
 * New form-tag generator for the Contact Form 7 6.0 editor (tag generator API version 2), written from scratch.
 * Time check: a start time in the future is treated as spam, and the spam log shows the minimum number of seconds required.
+* The settings page appears again as "Honeypot settings" at the end of the Contact menu. Since Contact Form 7 6.2 it was hidden from the menu.
 * Fixed a possible fatal error in the spam check when Contact Form 7 had no current form.
 * A honeypot value of "0" is now treated as spam.
 * "Reset to Defaults" no longer re-imports the settings of the original plugin.

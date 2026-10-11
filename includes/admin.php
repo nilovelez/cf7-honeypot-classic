@@ -61,19 +61,28 @@ function choneypot4cf7_settings_link( $links ) {
 add_filter( 'plugin_action_links_' . CHONEYPOT4CF7_PLUGIN_BASENAME, 'choneypot4cf7_settings_link' );
 
 /**
- * Register the settings page under the Contact Form 7 menu.
+ * Register the settings page at the end of the Contact Form 7 menu.
+ *
+ * Contact Form 7 6.2 renamed its top-level menu from "wpcf7" to
+ * "wpcf7-dashboard". The late priority runs this after Contact Form 7 has
+ * registered its menu, so we can check which one exists and the item is
+ * added last.
  */
 function choneypot4cf7_admin_menu() {
+	global $admin_page_hooks;
+
+	$parent = isset( $admin_page_hooks['wpcf7-dashboard'] ) ? 'wpcf7-dashboard' : 'wpcf7';
+
 	add_submenu_page(
-		'wpcf7',
+		$parent,
 		__( 'Classic Honeypot for CF7', 'classic-honeypot-for-cf7' ),
-		__( 'Honeypot', 'classic-honeypot-for-cf7' ),
+		__( 'Honeypot settings', 'classic-honeypot-for-cf7' ),
 		'manage_options',
 		'choneypot4cf7',
 		'choneypot4cf7_admin_page'
 	);
 }
-add_action( 'admin_menu', 'choneypot4cf7_admin_menu' );
+add_action( 'admin_menu', 'choneypot4cf7_admin_menu', 99 );
 
 /**
  * Load the settings page stylesheet, only on the settings page.
