@@ -9,7 +9,7 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Adds a honeypot anti-spam field to Contact Form 7 forms. An independent fork of Honeypot for Contact Form 7 2.1.1 by Nocean.
+A lean honeypot anti-spam field for Contact Form 7. A fork of the classic Honeypot for Contact Form 7 by Nocean, with no extra modules.
 
 == Description ==
 
@@ -106,7 +106,7 @@ Contact Form 7 shows this configuration warning when a mail setting uses an addr
 
 = Why is this a separate plugin? =
 
-Since version 2.1.1, Honeypot for Contact Form 7 has grown into a wider set of tools for Contact Form 7. This fork continues the 2.1.1 code for those who only need the honeypot. Both plugins are maintained independently.
+Since version 2.1.1, Honeypot for Contact Form 7 has grown into a wider set of tools for Contact Form 7. This fork exists for people who just want the honeypot, without extra modules.
 
 == Screenshots ==
 
