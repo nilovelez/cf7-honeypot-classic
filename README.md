@@ -61,10 +61,10 @@ On Windows, use `--mount-dir . /wordpress/wp-content/plugins/classic-honeypot-fo
 The release zip is built with `git archive` from the repository root:
 
 ```sh
-git archive --format=zip --prefix=classic-honeypot-for-cf7/ -o classic-honeypot-for-cf7.zip HEAD
+git archive --format=zip --prefix=classic-honeypot-for-cf7/ -o classic-honeypot-for-cf7-1.0.0.zip HEAD
 ```
 
-- `--prefix` puts the files inside a `classic-honeypot-for-cf7/` folder, as WordPress expects when uploading a plugin zip.
+- `--prefix` puts the files inside a `classic-honeypot-for-cf7/` folder, as WordPress expects when uploading a plugin zip. The zip file name includes the version, but the folder inside does not.
 - Development files, such as this README, the blueprint and the project notes, are left out through `export-ignore` rules in `.gitattributes`. To leave out a new development file, add it there.
 - Only committed files are included: commit your changes before building the zip.
 
