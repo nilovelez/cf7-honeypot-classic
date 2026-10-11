@@ -1,3 +1,5 @@
+![Classic Honeypot for CF7](assets/banner-772x250.png)
+
 # Classic Honeypot for CF7
 
 A lean honeypot anti-spam field for [Contact Form 7](https://wordpress.org/plugins/contact-form-7/). A fork of the classic [Honeypot for Contact Form 7](https://wordpress.org/plugins/contact-form-7-honeypot/) by Nocean, with no extra modules.
