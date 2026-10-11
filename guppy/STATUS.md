@@ -1,7 +1,7 @@
 ---
 estado: bloqueado
-siguiente_paso: Enviar el zip (git archive) al directorio de plugins de WordPress.org; tras la aprobación, subir el código y assets/ al SVN.
-bloqueo: "Nilo envía el plugin a WordPress.org con su cuenta y espera la revisión del equipo de plugins."
+siguiente_paso: Atender lo que pida la revisión manual; tras la aprobación, subir el código a trunk, crear el tag 1.0.0 y subir assets/ al SVN.
+bloqueo: "Revisión manual del equipo de plugins de WordPress.org (enviado el 2026-10-11, slug classic-honeypot-for-cf7)."
 actualizado: 2026-10-11
 ---
 
@@ -10,6 +10,8 @@ actualizado: 2026-10-11
 Fork GPL de Honeypot for Contact Form 7 2.1.1 (Nocean), renombrado como Classic Honeypot for CF7 y sin publicidad. Hitos 1 a 5 terminados y mergeados en `main`. El hito 5 montó el entorno de desarrollo (Playground con blueprint, sitio de Studio enlazado al repo y accesible desde la red local, MCP Adapter conectado a Claude Code), que servirá de base para una skill pública. Carpeta local y repo de GitHub renombrados al slug `classic-honeypot-for-cf7`.
 
 ## Diario
+
+- 2026-10-11: Enviado a WordPress.org (zip 1.0.0 desde `312c621`). Slug inicial `classic-honeypot-for-cf7`. Escaneo automático: Pass. En la nota a revisores se explica el fork y por qué se mantienen el tag `[honeypot]` y los filtros `wpcf7_honeypot_*`.
 
 - 2026-10-11: Icono nuevo (assets y pantalla de ajustes a 64x64), capturas repetidas con él y banners de 772x250 y 1544x500 generados desde `assets-src/` (HTML + script, excluido del zip). `assets/` completa. Plugin listo para enviar.
 
