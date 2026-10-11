@@ -185,7 +185,7 @@ function choneypot4cf7_admin_page() {
 			<div class="choneypot4cf7-admin__box">
 				<form action="" method="post" id="choneypot4cf7_options_form" name="choneypot4cf7_options_form">
 					<?php wp_nonce_field( 'choneypot4cf7-submit', 'choneypot4cf7_nonce' ); ?>
-					<h3><span class="dashicons dashicons-admin-generic"></span> <?php esc_html_e( 'Honeypot Settings', 'classic-honeypot-for-cf7' ); ?></h3>
+					<h3><span class="dashicons dashicons-admin-generic"></span> <?php esc_html_e( 'Honeypot settings', 'classic-honeypot-for-cf7' ); ?></h3>
 					<p class="choneypot4cf7-admin__introduction"><?php esc_html_e( 'Below are global settings for the Honeypot plugin. Many of these settings can be overridden when inserting the Honeypot field shortcode when creating your CF7 contact form.', 'classic-honeypot-for-cf7' ); ?></p>
 					<table class="form-table">
 						<tbody>

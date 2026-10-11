@@ -311,7 +311,7 @@ function choneypot4cf7_tag_generator( $contact_form, $options ) {
 	$tgg = new WPCF7_TagGeneratorGenerator( $options['content'] );
 
 	$settings_url  = add_query_arg( 'page', 'choneypot4cf7', admin_url( 'admin.php' ) );
-	$settings_link = '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Honeypot Settings', 'classic-honeypot-for-cf7' ) . '</a>';
+	$settings_link = '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Honeypot settings', 'classic-honeypot-for-cf7' ) . '</a>';
 	?>
 	<header class="description-box">
 		<h3><?php esc_html_e( 'Honeypot form-tag generator', 'classic-honeypot-for-cf7' ); ?></h3>
