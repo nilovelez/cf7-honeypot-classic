@@ -14,3 +14,4 @@
 /phpcs.xml.dist export-ignore
 /CLAUDE.md      export-ignore
 /guppy          export-ignore
+/blueprint.json export-ignore
