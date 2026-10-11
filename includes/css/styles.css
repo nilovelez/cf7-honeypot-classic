@@ -3,12 +3,13 @@
 }
 
 #choneypot4cf7-admin-page .choneypot4cf7-admin__title {
-	min-height: 43px;
-	line-height: 43px;
-	padding-left: 64px;
-	background-image: url('../images/honeypot-icon-small.png');
+	min-height: 64px;
+	line-height: 64px;
+	padding-left: 80px;
+	background-image: url('../images/icon.png');
 	background-repeat: no-repeat;
 	background-position: left center;
+	background-size: 64px 64px;
 }
 
 #choneypot4cf7-admin-page .choneypot4cf7-admin__title span {
