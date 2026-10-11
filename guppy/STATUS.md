@@ -1,6 +1,6 @@
 ---
 estado: activo
-siguiente_paso: Hito 5, paso 3: sitio de pruebas en Studio enlazado al repo y conexión de Claude Code con el MCP Adapter.
+siguiente_paso: Hito 5: probar el MCP Adapter desde una sesión nueva de Claude Code y decidir si se cierra el hito (merge a main) o falta algún paso.
 bloqueo: ""
 actualizado: 2026-10-11
 ---
@@ -10,6 +10,8 @@ actualizado: 2026-10-11
 Fork GPL de Honeypot for Contact Form 7 2.1.1 (Nocean), renombrado como Classic Honeypot for CF7 y sin publicidad. Hitos 1 a 4 terminados y mergeados en `main`. En curso el hito 5 (rama `feature/dev-environment`): montar el entorno de desarrollo con Playground, Studio y el MCP Adapter, que servirá de base para una skill pública. Carpeta local y repo de GitHub renombrados al slug `classic-honeypot-for-cf7`.
 
 ## Diario
+
+- 2026-10-11: Hito 5, paso 3: sitio de Studio `classic-honeypot.local` con el plugin enlazado al repo (junction), CF7 y página de prueba; accesible desde la red local añadiendo la IP del equipo al hosts. MCP Adapter 0.7.0 conectado a Claude Code por STDIO (`studio wp mcp-adapter serve`, alcance local, sin contraseña de aplicación). Playground también accesible en la red local con `--site-url`.
 
 - 2026-10-11: Repo de GitHub renombrado a `nilovelez/classic-honeypot-for-cf7`; remote y Plugin URI actualizados.
 - 2026-10-11: Carpeta local renombrada a `classic-honeypot-for-cf7` (el slug); memoria de Claude Code migrada y verificada.
