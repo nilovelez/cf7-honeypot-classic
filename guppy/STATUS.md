@@ -11,6 +11,8 @@ Fork GPL de Honeypot for Contact Form 7 2.1.1 (Nocean), renombrado como Classic 
 
 ## Diario
 
+- 2026-10-11: Rama `fix/settings-menu`: la página de ajustes vuelve a salir en el menú Contact como "Honeypot settings", al final (CF7 6.2 cambió el slug del menú a `wpcf7-dashboard` y la había dejado oculta). Pendiente de revisión de Nilo.
+
 - 2026-10-11: Decidido no añadir abilities (Abilities API) al plugin. Queda: revisión de Nilo, cambios menores (icono) y publicación en WordPress.org.
 
 - 2026-10-11: Hito 5 cerrado: MCP probado desde una sesión nueva de Claude Code; `feature/dev-environment` mergeada en `main`.
