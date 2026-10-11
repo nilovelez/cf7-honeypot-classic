@@ -11,6 +11,8 @@ Fork GPL de Honeypot for Contact Form 7 2.1.1 (Nocean), renombrado como Classic 
 
 ## Diario
 
+- 2026-10-11: Preparando la release (rama `feature/release-assets`): borrada `languages/` (y la cabecera Domain Path), creada `assets/` para el SVN de WordPress.org (excluida del zip) con las dos capturas del readme y placeholders de icono y banner. Falta el diseño final de icono y banner.
+
 - 2026-10-11: Rama `docs/readme` publicada en GitHub para revisión de Nilo: readme.txt reescrito en tono neutro (fork independiente en paralelo desde la 2.1.1, sin críticas al original) y README.md nuevo (excluido del zip). Plugin Check: 0 errores, 0 avisos (los filtros `wpcf7_honeypot_*` se mantienen por compatibilidad con `phpcs:ignore` justificado; puede que lo pidan cambiar en la revisión de WordPress.org). Revisión de arreglos del original hasta 3.7.2: todo lo aplicable ya está incorporado.
 
 - 2026-10-11: Rama `fix/settings-menu`: la página de ajustes vuelve a salir en el menú Contact como "Honeypot settings", al final (CF7 6.2 cambió el slug del menú a `wpcf7-dashboard` y la había dejado oculta). Pendiente de revisión de Nilo.

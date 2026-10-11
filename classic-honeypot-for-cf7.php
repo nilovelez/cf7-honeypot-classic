@@ -11,7 +11,6 @@
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       classic-honeypot-for-cf7
- * Domain Path:       /languages
  *
  * Classic Honeypot for CF7 is a fork of "Honeypot for Contact Form 7"
  * version 2.1.1 (https://wordpress.org/plugins/contact-form-7-honeypot/),
