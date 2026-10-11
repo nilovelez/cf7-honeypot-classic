@@ -9,35 +9,43 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A lean honeypot anti-spam field for Contact Form 7. A fork of the classic Honeypot for Contact Form 7 by Nocean, with no ads and no extra modules.
+A lean honeypot anti-spam field for Contact Form 7. A fork of the classic Honeypot for Contact Form 7 by Nocean, with no extra modules.
 
 == Description ==
 
-Classic Honeypot for CF7 adds a `[honeypot]` form tag to [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) (CF7) that stops spam bots without an ugly CAPTCHA. That's all it does.
+Classic Honeypot for CF7 adds a `[honeypot]` form tag to [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) (CF7) that stops spam bots without a CAPTCHA.
 
 The principle of a honeypot is simple: *bots are stupid*. While some spam is hand-delivered, the vast majority is submitted by bots that blindly fill in every field they find. The honeypot adds an extra field that is hidden from people; if it gets filled in, the submission is flagged as spam.
 
 The plugin also includes an optional submission time check: if a form is submitted faster than a configurable number of seconds, it is treated as spam, since bots usually submit forms in one or two seconds while people take much longer.
 
+= Features =
+
+* A `[honeypot]` form tag, with its own button in the Contact Form 7 form editor.
+* An optional submission time check.
+* Global settings for the placeholder, the accessibility message, the autocomplete value and how the field is hidden, which each form tag can override.
+* Blocked submissions are recorded in the Contact Form 7 spam log, with the reason.
+* Works with [Flamingo](https://wordpress.org/plugins/flamingo/) to review blocked submissions.
+
 = About this fork =
 
-This plugin is a fork of [Honeypot for Contact Form 7](https://wordpress.org/plugins/contact-form-7-honeypot/) version 2.1.1, written by Nocean and contributors and released under the GPLv2 or later. Later versions of that plugin, published by new owners, grew into a bundle of unrelated modules. Classic Honeypot for CF7 keeps only the original honeypot functionality, with these changes:
+Classic Honeypot for CF7 is a fork of [Honeypot for Contact Form 7](https://wordpress.org/plugins/contact-form-7-honeypot/), written by Nocean and contributors and released under the GPLv2 or later. It is based on version 2.1.1 and has been developed independently since then, in parallel with the original plugin.
 
-* All advertising, affiliate links and donation requests have been removed.
-* Bug fixes and compatibility updates for current versions of WordPress, PHP and Contact Form 7.
-* No new features, no tracking, no external services.
+This fork keeps the scope of version 2.1.1, the honeypot field and the time check, and maintains it for current versions of WordPress, PHP and Contact Form 7.
 
-All credit for the original idea and code goes to Nocean. Any bugs in this fork are ours, not theirs.
+All credit for the original idea and code goes to Nocean and the contributors of Honeypot for Contact Form 7. Any bugs in this fork are ours, not theirs.
+
+Classic Honeypot for CF7 is not affiliated with or endorsed by the authors of Honeypot for Contact Form 7 or Contact Form 7.
 
 = Switching from Honeypot for Contact Form 7 =
 
-Classic Honeypot for CF7 is a drop-in replacement:
+Classic Honeypot for CF7 can replace Honeypot for Contact Form 7 without changes to your forms:
 
-* It uses the same `[honeypot]` form tag and the same tag options, so your existing forms keep working unchanged.
+* It uses the same `[honeypot]` form tag and the same tag options, so your existing forms keep working.
 * It uses the same public filters (see below), so your customizations keep working too.
-* The first time it runs, it imports the settings of the original plugin.
+* The first time it runs, it imports the settings of Honeypot for Contact Form 7.
 
-Both plugins cannot run at the same time. Deactivate Honeypot for Contact Form 7 (or CF7 Apps) before activating this plugin. While the original is active, Classic Honeypot for CF7 stays inactive and shows a notice.
+The two plugins cannot run at the same time, because they register the same form tag. Deactivate Honeypot for Contact Form 7 before activating this plugin. While it is active, Classic Honeypot for CF7 stays inactive and shows a notice.
 
 = Recommended plugins =
 
@@ -64,7 +72,11 @@ The global settings should cover most needs, but these filters let you customize
 * `wpcf7_honeypot_container_css` - Adjusts the CSS applied to the honeypot container to keep it hidden from view.
 * `wpcf7_honeypot_html_output` - Adjusts the entire HTML output of the honeypot element.
 
-The filter names are the same as in the original plugin, so existing snippets keep working.
+The filter names are the same as in Honeypot for Contact Form 7, so existing snippets keep working.
+
+= Development =
+
+The source code is on GitHub: [nilovelez/classic-honeypot-for-cf7](https://github.com/nilovelez/classic-honeypot-for-cf7). Bug reports and pull requests are welcome there.
 
 == Frequently Asked Questions ==
 
@@ -88,9 +100,13 @@ When enabled, the honeypot field includes the time the form was loaded. If the f
 
 Yes. If the honeypot is triggered, no email is sent, and the submission is added to the spam section of Flamingo so you can review what tripped it.
 
+= Contact Form 7 warns about "unsafe email" without protection. Why? =
+
+Contact Form 7 shows this configuration warning when a mail setting uses an address typed by the visitor, such as an autoresponder sent to `[your-email]`, and the form has no CAPTCHA. A honeypot stops most bots, but it does not stop a person who misuses the form on purpose, so this plugin does not hide the warning. See [the Contact Form 7 documentation](https://contactform7.com/configuration-errors/unsafe-email-without-protection/) for your options.
+
 = Why is this a separate plugin? =
 
-The original plugin is no longer the simple honeypot it used to be. This fork exists for people who just want the honeypot, without ads or extra modules.
+Since version 2.1.1, Honeypot for Contact Form 7 has grown into a wider set of tools for Contact Form 7. This fork exists for people who just want the honeypot, without extra modules.
 
 == Screenshots ==
 
@@ -107,7 +123,7 @@ The original plugin is no longer the simple honeypot it used to be. This fork ex
 * The plugin stays inactive, with an admin notice, while the original plugin is active.
 * Requires WordPress 6.5, PHP 7.4 and Contact Form 7 6.0 or later. Compatibility code for older versions of Contact Form 7 has been removed.
 * Added the `Requires Plugins: contact-form-7` header, which replaces the old "Contact Form 7 must be installed" notice and its dismiss script.
-* Removed all advertising from the settings page: affiliate banners, the "Recommended" book, the donation box, the rating request and the link to the original plugin's support forum.
+* The settings page only contains the settings. The promotional boxes and the links to the support forum of Honeypot for Contact Form 7 were removed, since this fork has its own support forum.
 * Security: all settings are sanitized when saved, and all output (settings page and honeypot field HTML) is escaped.
 * Security: the time check threshold is read on the server. The form no longer sends it, so bots can't change it, and a submission without the start time is treated as spam.
 * New form-tag generator for the Contact Form 7 6.0 editor (tag generator API version 2), written from scratch.
@@ -120,7 +136,7 @@ The original plugin is no longer the simple honeypot it used to be. This fork ex
 * The settings stylesheet is loaded only on the settings page. Settings are deleted on uninstall through `uninstall.php`.
 * Removed the spam counter. It wrote to the database on every blocked submission and could overwrite settings; the Contact Form 7 spam log (and Flamingo) already show what was blocked and why.
 
-= Changelog of the original plugin (Honeypot for Contact Form 7, by Nocean) =
+= Changelog of Honeypot for Contact Form 7 up to version 2.1.1, by Nocean =
 
 = 2.1.1 =
 Fixes small bug when enabling in bulk with other plugins.
@@ -209,4 +225,4 @@ Small update for W3C compliance.
 == Upgrade Notice ==
 
 = 1.0.0 =
-First release of the fork. Deactivate Honeypot for Contact Form 7 before activating; your settings will be imported.
+First release. If you use Honeypot for Contact Form 7, deactivate it before activating this plugin; your settings will be imported.

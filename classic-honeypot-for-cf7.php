@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Classic Honeypot for CF7
  * Plugin URI:        https://github.com/nilovelez/classic-honeypot-for-cf7
- * Description:       Adds a honeypot anti-spam field to Contact Form 7 forms. A lean fork of Honeypot for Contact Form 7 2.1.1 by Nocean.
+ * Description:       A lean honeypot anti-spam field for Contact Form 7. A fork of the classic Honeypot for Contact Form 7 by Nocean, with no extra modules.
  * Version:           1.0.0
  * Requires at least: 6.5
  * Requires PHP:      7.4

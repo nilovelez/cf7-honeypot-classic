@@ -103,12 +103,14 @@ function choneypot4cf7_form_tag_handler( $tag ) {
 		$accessibility_message = __( 'Please leave this field empty.', 'classic-honeypot-for-cf7' );
 	}
 
+	// The wpcf7_honeypot_* filters keep the names of Honeypot for Contact Form 7,
+	// so existing customizations keep working after switching plugins.
 	$atts = array(
 		'class'             => $tag->get_class_option( wpcf7_form_controls_class( 'text' ) ),
 		'id'                => $tag->get_option( 'id', 'id', true ),
 		'wrapper_id'        => $tag->get_option( 'wrapper-id', 'id', true ),
 		'placeholder'       => $placeholder,
-		'message'           => apply_filters( 'wpcf7_honeypot_accessibility_message', $accessibility_message ),
+		'message'           => apply_filters( 'wpcf7_honeypot_accessibility_message', $accessibility_message ), // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Kept for compatibility.
 		'name'              => $tag->name,
 		'type'              => $tag->type,
 		'validautocomplete' => $settings['validautocomplete'],
@@ -117,7 +119,7 @@ function choneypot4cf7_form_tag_handler( $tag ) {
 		'timecheck_enabled' => $settings['timecheck_enabled'],
 		'timecheck_value'   => $settings['timecheck_value'],
 		'validation_error'  => wpcf7_get_validation_error( $tag->name ),
-		'css'               => apply_filters( 'wpcf7_honeypot_container_css', 'display:none !important; visibility:hidden !important;' ),
+		'css'               => apply_filters( 'wpcf7_honeypot_container_css', 'display:none !important; visibility:hidden !important;' ), // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Kept for compatibility.
 	);
 
 	$unique_id = uniqid( 'wpcf7-' );
@@ -166,8 +168,9 @@ function choneypot4cf7_form_tag_handler( $tag ) {
 	// The validation error HTML comes from Contact Form 7, already escaped.
 	$html .= $atts['validation_error'] . '</span>';
 
-	// Hook for filtering finished Honeypot form element.
-	return apply_filters( 'wpcf7_honeypot_html_output', $html, $atts );
+	// Hook for filtering finished Honeypot form element. The name is kept from
+	// Honeypot for Contact Form 7 for compatibility.
+	return apply_filters( 'wpcf7_honeypot_html_output', $html, $atts ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Kept for compatibility.
 }
 
 /**
