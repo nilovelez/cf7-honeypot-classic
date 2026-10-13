@@ -1,8 +1,8 @@
 ---
 estado: bloqueado
-siguiente_paso: Esperar la respuesta a la apelación y atender lo que pidan (responder siempre a su email, nunca reenviar el plugin); si lo aprueban, subir el código a trunk, crear el tag 1.0.0 y subir assets/ al SVN.
-bloqueo: "Respuesta del equipo de plugins de WordPress.org a la apelación del rechazo por duplicado (apelado el 2026-10-12)."
-actualizado: 2026-10-12
+siguiente_paso: Esperar la revisión manual y atender lo que pidan respondiendo a su email (no reenviar salvo que lo pidan ellos); si lo aprueban, subir el código a trunk, crear el tag 1.0.0 y subir assets/ al SVN.
+bloqueo: "Revisión manual del equipo de plugins de WordPress.org (reenviado el 2026-10-13 a petición suya, tras la apelación)."
+actualizado: 2026-10-13
 ---
 
 # Estado
@@ -10,6 +10,8 @@ actualizado: 2026-10-12
 Fork GPL de Honeypot for Contact Form 7 2.1.1 (Nocean), renombrado como Classic Honeypot for CF7 y sin publicidad. Hitos 1 a 5 terminados y mergeados en `main`. El hito 5 montó el entorno de desarrollo (Playground con blueprint, sitio de Studio enlazado al repo y accesible desde la red local, MCP Adapter conectado a Claude Code), que servirá de base para una skill pública. Carpeta local y repo de GitHub renombrados al slug `classic-honeypot-for-cf7`.
 
 ## Diario
+
+- 2026-10-13: Apelación aceptada a trámite: WordPress.org pidió volver a subir el zip desde el formulario de alta y que un revisor contactará. Reenviado. Esperando la revisión manual.
 
 - 2026-10-12: WordPress.org lo rechaza por ser un duplicado de Honeypot for Contact Form 7. Apelado respondiendo a su email con `classic-honeypot-for-cf7-1.0.0.zip`: es una copia directa de la 2.1.1 (mayo de 2021, la última de Nocean), el original se compró en julio de 2024 y desde la 2.1.1 es un desarrollo propio en paralelo sin código de los cambios posteriores. También se explicó por qué se mantienen el tag `[honeypot]` y los filtros `wpcf7_honeypot_*`. Esperando respuesta.
 
