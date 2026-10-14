@@ -1,8 +1,8 @@
 ---
 estado: bloqueado
 siguiente_paso: Esperar la revisión manual y atender lo que pidan respondiendo a su email (no reenviar salvo que lo pidan ellos); si lo aprueban, subir el código a trunk, crear el tag 1.0.0 y subir assets/ al SVN.
-bloqueo: "Revisión manual del equipo de plugins de WordPress.org (reenviado el 2026-10-13 a petición suya, tras la apelación)."
-actualizado: 2026-10-13
+bloqueo: "Revisión manual del equipo de plugins de WordPress.org (reenviado por tercera vez el 2026-10-14; el revisor que lleva la apelación dijo que continuará él la revisión)."
+actualizado: 2026-10-14
 ---
 
 # Estado
@@ -10,6 +10,8 @@ actualizado: 2026-10-13
 Fork GPL de Honeypot for Contact Form 7 2.1.1 (Nocean), renombrado como Classic Honeypot for CF7 y sin publicidad. Hitos 1 a 5 terminados y mergeados en `main`. El hito 5 montó el entorno de desarrollo (Playground con blueprint, sitio de Studio enlazado al repo y accesible desde la red local, MCP Adapter conectado a Claude Code), que servirá de base para una skill pública. Carpeta local y repo de GitHub renombrados al slug `classic-honeypot-for-cf7`.
 
 ## Diario
+
+- 2026-10-14: Otro revisor cerró el envío sin ver las notas de la apelación (segundo rechazo). Al preguntar, el revisor de la apelación pidió volver a subirlo y avisarle en el hilo para continuar él la revisión. Reenviado.
 
 - 2026-10-13: Apelación aceptada a trámite: WordPress.org pidió volver a subir el zip desde el formulario de alta y que un revisor contactará. Reenviado. Esperando la revisión manual.
 
