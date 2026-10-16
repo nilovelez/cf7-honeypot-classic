@@ -8,6 +8,7 @@
 
 # Development files excluded from `git archive` (release zip).
 /.gitattributes export-ignore
+/.github        export-ignore
 /.gitignore     export-ignore
 /composer.json  export-ignore
 /composer.lock  export-ignore

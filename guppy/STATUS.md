@@ -1,39 +1,38 @@
----
-estado: bloqueado
-siguiente_paso: Esperar la revisión manual y atender lo que pidan respondiendo a su email (no reenviar salvo que lo pidan ellos); si lo aprueban, subir el código a trunk, crear el tag 1.0.0 y subir assets/ al SVN.
-bloqueo: "Revisión manual del equipo de plugins de WordPress.org (reenviado por tercera vez el 2026-10-14; el revisor que lleva la apelación dijo que continuará él la revisión)."
-actualizado: 2026-10-14
----
+# Status
 
-# Estado
+GPL fork of Honeypot for Contact Form 7 2.1.1 (Nocean), renamed Classic Honeypot for CF7 and free of ads. Milestones 1 to 5 are finished and merged into `main`. Milestone 5 set up the development environment (Playground with a blueprint, a Studio site linked to the repo and reachable from the local network, MCP Adapter connected to Claude Code), which will serve as the basis for a public skill. Local folder and GitHub repo renamed to the slug `classic-honeypot-for-cf7`.
 
-Fork GPL de Honeypot for Contact Form 7 2.1.1 (Nocean), renombrado como Classic Honeypot for CF7 y sin publicidad. Hitos 1 a 5 terminados y mergeados en `main`. El hito 5 montó el entorno de desarrollo (Playground con blueprint, sitio de Studio enlazado al repo y accesible desde la red local, MCP Adapter conectado a Claude Code), que servirá de base para una skill pública. Carpeta local y repo de GitHub renombrados al slug `classic-honeypot-for-cf7`.
+**Blocked:** waiting for the manual review by the WordPress.org plugin team (resubmitted for the third time on 2026-10-14; the reviewer handling the appeal said he will continue the review himself).
 
-## Diario
+**Next step:** wait for the manual review and address whatever they ask by replying to their email (do not resubmit unless they ask); if approved, upload the code to trunk, create the 1.0.0 tag and upload `assets/` to SVN.
 
-- 2026-10-14: Otro revisor cerró el envío sin ver las notas de la apelación (segundo rechazo). Al preguntar, el revisor de la apelación pidió volver a subirlo y avisarle en el hilo para continuar él la revisión. Reenviado.
+## Log
 
-- 2026-10-13: Apelación aceptada a trámite: WordPress.org pidió volver a subir el zip desde el formulario de alta y que un revisor contactará. Reenviado. Esperando la revisión manual.
+- 2026-10-16: migrated to the new Guppy format (STATUS.json).
 
-- 2026-10-12: WordPress.org lo rechaza por ser un duplicado de Honeypot for Contact Form 7. Apelado respondiendo a su email con `classic-honeypot-for-cf7-1.0.0.zip`: es una copia directa de la 2.1.1 (mayo de 2021, la última de Nocean), el original se compró en julio de 2024 y desde la 2.1.1 es un desarrollo propio en paralelo sin código de los cambios posteriores. También se explicó por qué se mantienen el tag `[honeypot]` y los filtros `wpcf7_honeypot_*`. Esperando respuesta.
+- 2026-10-14: Another reviewer closed the submission without seeing the appeal notes (second rejection). When asked, the appeal reviewer asked us to upload it again and let him know in the thread so he can continue the review himself. Resubmitted.
 
-- 2026-10-11: Enviado a WordPress.org (zip 1.0.0 desde `312c621`). Slug inicial `classic-honeypot-for-cf7`. Escaneo automático: Pass. En la nota a revisores se explica el fork y por qué se mantienen el tag `[honeypot]` y los filtros `wpcf7_honeypot_*`.
+- 2026-10-13: Appeal accepted for consideration: WordPress.org asked us to upload the zip again from the submission form and said a reviewer will get in touch. Resubmitted. Waiting for the manual review.
 
-- 2026-10-11: Icono nuevo (assets y pantalla de ajustes a 64x64), capturas repetidas con él y banners de 772x250 y 1544x500 generados desde `assets-src/` (HTML + script, excluido del zip). `assets/` completa. Plugin listo para enviar.
+- 2026-10-12: WordPress.org rejects it as a duplicate of Honeypot for Contact Form 7. Appealed by replying to their email with `classic-honeypot-for-cf7-1.0.0.zip`: it is a direct copy of 2.1.1 (May 2021, the last Nocean release), the original was bought in July 2024, and since 2.1.1 it is an independent parallel development with no code from later changes. We also explained why the `[honeypot]` tag and the `wpcf7_honeypot_*` filters are kept. Waiting for a reply.
 
-- 2026-10-11: Preparando la release (rama `feature/release-assets`): borrada `languages/` (y la cabecera Domain Path), creada `assets/` para el SVN de WordPress.org (excluida del zip) con las dos capturas del readme y placeholders de icono y banner. Falta el diseño final de icono y banner.
+- 2026-10-11: Submitted to WordPress.org (1.0.0 zip from `312c621`). Initial slug `classic-honeypot-for-cf7`. Automated scan: Pass. The note to reviewers explains the fork and why the `[honeypot]` tag and the `wpcf7_honeypot_*` filters are kept.
 
-- 2026-10-11: Rama `docs/readme` publicada en GitHub para revisión de Nilo: readme.txt reescrito en tono neutro (fork independiente en paralelo desde la 2.1.1, sin críticas al original) y README.md nuevo (excluido del zip). Plugin Check: 0 errores, 0 avisos (los filtros `wpcf7_honeypot_*` se mantienen por compatibilidad con `phpcs:ignore` justificado; puede que lo pidan cambiar en la revisión de WordPress.org). Revisión de arreglos del original hasta 3.7.2: todo lo aplicable ya está incorporado.
+- 2026-10-11: New icon (assets and settings screen at 64x64), screenshots retaken with it, and 772x250 and 1544x500 banners generated from `assets-src/` (HTML + script, excluded from the zip). `assets/` complete. Plugin ready to submit.
 
-- 2026-10-11: Rama `fix/settings-menu`: la página de ajustes vuelve a salir en el menú Contact como "Honeypot settings", al final (CF7 6.2 cambió el slug del menú a `wpcf7-dashboard` y la había dejado oculta). Pendiente de revisión de Nilo.
+- 2026-10-11: Preparing the release (branch `feature/release-assets`): deleted `languages/` (and the Domain Path header), created `assets/` for the WordPress.org SVN (excluded from the zip) with the two readme screenshots and icon and banner placeholders. Final icon and banner design still pending.
 
-- 2026-10-11: Decidido no añadir abilities (Abilities API) al plugin. Queda: revisión de Nilo, cambios menores (icono) y publicación en WordPress.org.
+- 2026-10-11: Branch `docs/readme` published on GitHub for Nilo's review: readme.txt rewritten in a neutral tone (independent fork developed in parallel since 2.1.1, no criticism of the original) and a new README.md (excluded from the zip). Plugin Check: 0 errors, 0 warnings (the `wpcf7_honeypot_*` filters are kept for compatibility with a justified `phpcs:ignore`; the WordPress.org review may ask to change them). Review of the original's fixes up to 3.7.2: everything applicable is already included.
 
-- 2026-10-11: Hito 5 cerrado: MCP probado desde una sesión nueva de Claude Code; `feature/dev-environment` mergeada en `main`.
+- 2026-10-11: Branch `fix/settings-menu`: the settings page shows up again in the Contact menu as "Honeypot settings", at the end (CF7 6.2 changed the menu slug to `wpcf7-dashboard` and had left it hidden). Pending Nilo's review.
 
-- 2026-10-11: Hito 5, paso 3: sitio de Studio `classic-honeypot.local` con el plugin enlazado al repo (junction), CF7 y página de prueba; accesible desde la red local añadiendo la IP del equipo al hosts. MCP Adapter 0.7.0 conectado a Claude Code por STDIO (`studio wp mcp-adapter serve`, alcance local, sin contraseña de aplicación). Playground también accesible en la red local con `--site-url`.
+- 2026-10-11: Decided not to add abilities (Abilities API) to the plugin. Remaining: Nilo's review, minor changes (icon) and publishing on WordPress.org.
 
-- 2026-10-11: Repo de GitHub renombrado a `nilovelez/classic-honeypot-for-cf7`; remote y Plugin URI actualizados.
-- 2026-10-11: Carpeta local renombrada a `classic-honeypot-for-cf7` (el slug); memoria de Claude Code migrada y verificada.
-- 2026-10-11: Hito 5, paso 2: blueprint.json de desarrollo; plugin probado en Playground (honeypot, control de tiempo e importación de ajustes, todo correcto).
-- 2026-10-11: guppy/STATUS.md creado.
+- 2026-10-11: Milestone 5 closed: MCP tested from a new Claude Code session; `feature/dev-environment` merged into `main`.
+
+- 2026-10-11: Milestone 5, step 3: Studio site `classic-honeypot.local` with the plugin linked to the repo (junction), CF7 and a test page; reachable from the local network by adding the machine's IP to the hosts file. MCP Adapter 0.7.0 connected to Claude Code over STDIO (`studio wp mcp-adapter serve`, local scope, no application password). Playground also reachable on the local network with `--site-url`.
+
+- 2026-10-11: GitHub repo renamed to `nilovelez/classic-honeypot-for-cf7`; remote and Plugin URI updated.
+- 2026-10-11: Local folder renamed to `classic-honeypot-for-cf7` (the slug); Claude Code memory migrated and verified.
+- 2026-10-11: Milestone 5, step 2: development blueprint.json; plugin tested in Playground (honeypot, time check and settings import, all correct).
+- 2026-10-11: guppy/STATUS.md created.
